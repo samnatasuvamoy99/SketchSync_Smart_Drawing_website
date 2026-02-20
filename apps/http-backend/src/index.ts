@@ -1,6 +1,6 @@
 
 import express from "express"
-import {connectDB} from "./config/db.js"
+import {connectDB} from "@repo/db/client"
 import cors from "cors"
 import userRouter from "./routes/auth.routes.js";
 import cookieParser from "cookie-parser";

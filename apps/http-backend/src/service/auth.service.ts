@@ -1,11 +1,12 @@
 
-import { prisma } from "../lib/prisma.js";
+import {prisma} from "@repo/db/client"
 import bcrypt from "bcryptjs";
-import { signupSchema, signinSchema } from "../schema/userdata_validation.schema.js"
+import { userSignupSchema, userSigninSchema} from "../schema/userdata_validation.schema.js"
+
 
 export const UsersSignupService = async (body: any) => {
 
-   const parsed = signupSchema.parse(body);
+   const parsed = userSignupSchema.parse(body);
 
    const hashPassword = await bcrypt.hash(parsed.password, 10);
 
@@ -24,7 +25,7 @@ export const UsersSignupService = async (body: any) => {
 
 // here we write signin logic service...
 export const UserSigninService = async (body: any) => {
-const parsed = signinSchema.safeParse(body);
+const parsed = userSigninSchema.safeParse(body);
 
    if (!parsed.success) {
       throw new Error("Invalid input provide correct....!")
