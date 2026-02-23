@@ -1,19 +1,20 @@
-
-import express from "express"
+import dotenv from "dotenv";
+dotenv.config();
+import express from "express";
 import {connectDB} from "@repo/db/client"
 import cors from "cors"
 import userRouter from "./routes/auth.routes.js";
+import roomRouter from "./routes/chatroom.routes.js";
 import cookieParser from "cookie-parser";
 const app = express();
-const port = 3000;
+const port = 4000;
 app.use(cors());
 app.use(express.json());
 app.use(cookieParser());
 
-app.use("/api/v1/user/auth",userRouter)
 
-
-
+app.use("/api/v1/user/auth",userRouter);
+app.use("message/v2/admin/chart",roomRouter);
 
 
 async function startServer(){

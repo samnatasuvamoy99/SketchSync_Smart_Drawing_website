@@ -22,7 +22,7 @@
   "type": "module",
   "dependencies": {
     "@prisma/adapter-pg": "^7.3.0",
-    "@prisma/client": "^7.4.0",
+    "@prisma/client": "^7.4.1",
     "dotenv": "^17.2.4",
     "pg": "^8.18.0"
   }

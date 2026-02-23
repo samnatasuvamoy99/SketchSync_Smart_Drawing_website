@@ -10,9 +10,9 @@ datasource db {
 
 model User {
   id            Int         @id         @default(autoincrement())
-  username      String?     @unique
-  email         String?     @unique
-  password      String?     @unique
+  username      String      @unique
+  email         String      @unique
+  password      String      @unique
   photo         String?
   rooms         Room[]      @relation("AdminRooms")
   chats         Chat[]
