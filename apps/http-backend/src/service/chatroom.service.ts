@@ -1,11 +1,10 @@
-import dotenv from "dotenv";
-dotenv.config();
+
 import {prisma} from "@repo/db/client"
 import { userRoomSchema} from "../schema/userdata_validation.schema.js";
 
 
 
-export const CreateRoomService = async (body :any , userId: number)=>{
+export const CreateRoomService = async (body :any , userId: string)=>{
      
    const parseData =userRoomSchema.safeParse(body);
 
@@ -18,6 +17,11 @@ export const CreateRoomService = async (body :any , userId: number)=>{
      if(!roomName){
        throw new Error("USER_ROOM_NAME_NOT_FOUND");
      }
+
+     if (!userId) {
+  throw new Error("User not authenticated");
+   }
+
    
      const room = await prisma.room.create({
          data:{
@@ -26,5 +30,6 @@ export const CreateRoomService = async (body :any , userId: number)=>{
          }
 
      });
+
    return room;
 }

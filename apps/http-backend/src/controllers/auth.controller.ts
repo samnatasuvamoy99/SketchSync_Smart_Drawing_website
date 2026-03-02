@@ -1,5 +1,4 @@
-dotenv.config();
-import dotenv from "dotenv";
+
 import { UsersSignupService, UserSigninService } from "../service/auth.service.js"
 import type { Request, Response } from "express";
 import bcrypt from "bcryptjs";

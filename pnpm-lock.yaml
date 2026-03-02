@@ -128,7 +128,7 @@ importers:
         specifier: ^9.0.10
         version: 9.0.10
       dotenv:
-        specifier: ^17.2.4
+        specifier: ^17.3.1
         version: 17.3.1
       jsonwebtoken:
         specifier: ^9.0.3
@@ -137,12 +137,21 @@ importers:
         specifier: ^8.19.0
         version: 8.19.0
     devDependencies:
+      '@repo/common':
+        specifier: workspace:*
+        version: link:../../packages/common
+      '@repo/db':
+        specifier: workspace:*
+        version: link:../../packages/db
       '@repo/typescript-config':
         specifier: workspace:*
         version: link:../../packages/typescript-config
       '@types/ws':
         specifier: ^8.18.1
         version: 8.18.1
+      prisma:
+        specifier: ^7.4.0
+        version: 7.4.1(@types/react@19.2.2)(react-dom@19.2.4(react@19.2.4))(react@19.2.4)(typescript@5.9.2)
 
   packages/common:
     dependencies:

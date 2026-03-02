@@ -1,5 +1,4 @@
-import dotenv from "dotenv";
-dotenv.config();
+
 import {prisma} from "@repo/db/client"
 import bcrypt from "bcryptjs";
 import { userSignupSchema, userSigninSchema} from "../schema/userdata_validation.schema.js"
@@ -7,7 +6,7 @@ import { userSignupSchema, userSigninSchema} from "../schema/userdata_validation
 
 export const UsersSignupService = async (body: any) => {
 
-   const parsed = userSignupSchema.parse(body);
+const parsed = userSignupSchema.parse(body);
 
       console.log(parsed.username);
       

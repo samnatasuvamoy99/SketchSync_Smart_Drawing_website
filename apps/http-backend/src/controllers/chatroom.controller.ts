@@ -1,5 +1,4 @@
-dotenv.config();
-import dotenv from "dotenv";
+
 import { CreateRoomService} from "../service/chatroom.service.js";
 import { Request, Response } from "express";
 
@@ -18,7 +17,7 @@ export const createRoomController = async (
 
     res.status(201).json({
       message: "Room created successfully",
-      roomId:room,
+      roomId:room.id,
     });
   } catch (error: any) {
     res.status(500).json({
