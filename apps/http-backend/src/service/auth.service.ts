@@ -1,7 +1,7 @@
 
 import {prisma} from "@repo/db/client"
 import bcrypt from "bcryptjs";
-import { userSignupSchema, userSigninSchema} from "../schema/userdata_validation.schema.js"
+import { userSignupSchema, userSigninSchema} from "../schema/data_validation.schema.js"
 
 
 export const UsersSignupService = async (body: any) => {

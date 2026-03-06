@@ -15,3 +15,7 @@ export const signinSchema = z.object({
 export const CreateRoomSchema = z.object({
     roomName: z.string().min(3).max(20),
 })
+
+export const ChatRooms_Id = z.string().uuid("Invalid Room ID format");
+
+export type ChatRoomIdType = z.infer<typeof ChatRooms_Id>;

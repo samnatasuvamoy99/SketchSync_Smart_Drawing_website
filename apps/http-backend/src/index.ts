@@ -15,7 +15,7 @@ app.use(cookieParser());
 
 
 app.use("/api/v1/user/auth",userRouter);
-app.use("/message/v2/admin/chart",roomRouter);
+app.use("/message/v2/admin/chat",roomRouter);
 
 
 async function startServer(){

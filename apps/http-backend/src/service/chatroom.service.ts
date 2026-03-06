@@ -1,7 +1,6 @@
 
 import {prisma} from "@repo/db/client"
-import { userRoomSchema} from "../schema/userdata_validation.schema.js";
-
+import { userRoomSchema ,ChatRoomId} from "../schema/data_validation.schema.js";
 
 
 export const CreateRoomService = async (body :any , userId: string)=>{
@@ -33,3 +32,41 @@ export const CreateRoomService = async (body :any , userId: string)=>{
 
    return room;
 }
+
+// Service -> fetch messages from db 
+export const ChatsRoomMessage = async (body: any) => {
+  const parsed = ChatRoomId.safeParse(body);
+
+  if (!parsed.success) {
+    throw new Error("RoomId not Found");
+  }
+
+  const messages = await prisma.chat.findMany({
+    where: {
+       roomId:parsed.data
+      },
+    orderBy:{
+        id:"desc"
+    },
+    take:50
+  });
+
+  return messages;
+};
+
+//Service -> fetch roomId using slug from db...
+export const RoomIdUsingSlug = async (body: any) => {
+  const parsed = ChatRoomId.safeParse(body);
+
+  if (!parsed.success) {
+    throw new Error("RoomId not Found");
+  }
+
+  const slugRoomId = await prisma.room.findFirst({
+    where: {
+       slug:parsed.data
+      }
+  });
+
+  return slugRoomId;
+};
