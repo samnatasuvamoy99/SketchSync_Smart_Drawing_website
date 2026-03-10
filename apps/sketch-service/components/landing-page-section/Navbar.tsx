@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import { Button, Badge } from "@repo/ui";
+import Link from 'next/link'
 
 const NAV_ITEMS = [
   { id: "hero",          label: "Home" },
@@ -119,9 +120,13 @@ export function Navbar({ activeSection }: { activeSection: string }) {
       {/* ── CTA ── */}
       <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
         <Badge variant="live" dot>Live Beta</Badge>
-        <Button variant="primary" size="sm">
+         
+         <Link href={"/signup"}>
+         <Button variant="primary" size="sm">
           Start Free →
         </Button>
+         </Link>
+        
       </div>
     </nav>
   );

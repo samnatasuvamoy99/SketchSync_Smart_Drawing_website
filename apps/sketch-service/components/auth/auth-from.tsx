@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import Link from "next/link";
 
 type AuthType = "signin" | "signup";
 
@@ -89,7 +90,7 @@ export default function AuthForm({ type }: AuthFormProps) {
       </div>
 
       {/* RIGHT PANEL */}
-      <div className="w-[350px] flex items-center justify-center mr-[150px]">
+      <div className="w-[350px] flex items-center justify-center mr-[250px]">
         <div className="w-full bg-[#13131a] border border-[#2a2a35] p-[40px] rounded-[15px]">
 
           <h1 className="mb-[25px] text-[24px]  flex justify-center">
@@ -157,9 +158,26 @@ export default function AuthForm({ type }: AuthFormProps) {
           </form>
 
           <p className="mt-[20px] text-center text-[#777]">
-            {type === "signin"
+            {/* {type === "signin"
               ? "Don't have an account?"
-              : "Already have an account?"}
+              : "Already have an account?" <Link href={"/signin"}> </Link>} */}
+
+              {type === "signin" ? (
+  <div className="flex ml-7" >
+    Don't have an account? <Link href="/signup">
+    <h1 className="font-mono ml-1 text-[#f4eeee]">
+      Signup
+      </h1></Link>
+  </div>
+) : (
+  <div className="flex ml-7">
+    Already have an account? <Link href="/signin">
+    <h1 className="font-mono ml-1 text-[#f4eeee]">
+      Signin
+      </h1>
+    </Link>
+  </div>
+)}
           </p>
 
         </div>

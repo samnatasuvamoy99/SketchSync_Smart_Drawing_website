@@ -63,8 +63,8 @@ export function HeroSection() {
     >
       <div className="grid-bg" />
 
-      {/* ambient glow */}
-      {/* <div style={{ position: "absolute", top: "8%",  left: "4%",  width: 560, height: 560, background: "radial-gradient(circle, rgba(255,215,0,0.08) 0%, transparent 68%)", borderRadius: "50%", pointerEvents: "none" }} />
+     {/* ambient glow */}
+       {/* <div style={{ position: "absolute", top: "8%",  left: "4%",  width: 560, height: 560, background: "radial-gradient(circle, rgba(255,215,0,0.08) 0%, transparent 68%)", borderRadius: "50%", pointerEvents: "none" }} />
       <div style={{ position: "absolute", bottom: "4%", right: "4%", width: 400, height: 400, background: "radial-gradient(circle, rgba(200,134,10,0.06) 0%, transparent 68%)", borderRadius: "50%", pointerEvents: "none" }} /> */}
             
             <div

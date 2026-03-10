@@ -62,8 +62,11 @@ body {
   pointer-events: none;
   z-index: 0;
   background-image:
-    linear-gradient(rgba(0,0,0,0.028) 1px, transparent 1px),
+    /* linear-gradient(rgba(0,0,0,0.028) 1px, transparent 1px),
     linear-gradient(90deg, rgba(0,0,0,0.028) 1px, transparent 1px);
+  background-size: 48px 48px; */
+   linear-gradient(rgba(0, 0, 0, 0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 0, 0, 0.012) 1px, transparent 1px);
   background-size: 48px 48px;
 }
 
