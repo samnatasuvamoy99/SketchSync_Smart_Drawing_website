@@ -1,7 +1,9 @@
 "use client";
-
 import React, { useState } from "react";
 import Link from "next/link";
+import { signup, signin } from "@/service/auth-service";
+import { useRouter } from "next/navigation";
+
 
 type AuthType = "signin" | "signup";
 
@@ -15,31 +17,40 @@ export default function AuthForm({ type }: AuthFormProps) {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+
+  const router = useRouter();
+
+  // pass the auth data from backend 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    let body;
+    let response;
+    try {
+      if (type === "signup") {
+        response = await signup({ username, email, password });
+        alert(" WELCOME to Skythch..")
+        router.push("/signin");
 
-    if (type === "signup") {
-      body = { username, email, password };
-    } else {
-      body = { email, password };
-    }
+      }
+      else {
+        response = await signin({ email, password });
+        alert("Signin successfully completed...!");
+        router.push("/dashboard");
 
-    const res = await fetch(`/api/auth/${type}`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(body),
-    });
 
-    const data = await res.json();
-    console.log(data);
-  };
-
+      }
+      console.log(response);
+    } catch (error) {
+      console.error("Auth Error:", error);
+      alert("Something went to be wrong");
+    };
+  }
+  
   return (
     <div className="font-[Sora] flex min-h-screen bg-[#0a0a0d] text-white relative">
 
       {/* GRID BACKGROUND */}
+
       <div
         className="fixed inset-0 pointer-events-none"
         style={{
@@ -50,6 +61,8 @@ export default function AuthForm({ type }: AuthFormProps) {
       />
 
       {/* LEFT PANEL */}
+
+
       <div className="flex-1 flex items-center justify-center p-[60px]">
         <div className="max-w-[420px]">
 
@@ -90,6 +103,8 @@ export default function AuthForm({ type }: AuthFormProps) {
       </div>
 
       {/* RIGHT PANEL */}
+
+
       <div className="w-[350px] flex items-center justify-center mr-[250px]">
         <div className="w-full bg-[#13131a] border border-[#2a2a35] p-[40px] rounded-[15px]">
 
@@ -157,28 +172,28 @@ export default function AuthForm({ type }: AuthFormProps) {
 
           </form>
 
-          <p className="mt-[20px] text-center text-[#777]">
+          <div className="mt-[20px] text-center text-[#777]">
             {/* {type === "signin"
               ? "Don't have an account?"
               : "Already have an account?" <Link href={"/signin"}> </Link>} */}
 
-              {type === "signin" ? (
-  <div className="flex ml-7" >
-    Don't have an account? <Link href="/signup">
-    <h1 className="font-mono ml-1 text-[#f4eeee]">
-      Signup
-      </h1></Link>
-  </div>
-) : (
-  <div className="flex ml-7">
-    Already have an account? <Link href="/signin">
-    <h1 className="font-mono ml-1 text-[#f4eeee]">
-      Signin
-      </h1>
-    </Link>
-  </div>
-)}
-          </p>
+            {type === "signin" ? (
+              <div className="flex ml-7" >
+                Don't have an account? <Link href="/signup">
+                  <h1 className="font-mono ml-1 text-[#f4eeee]">
+                    Signup
+                  </h1></Link>
+              </div>
+            ) : (
+              <div className="flex ml-7">
+                Already have an account? <Link href="/signin">
+                  <h1 className="font-mono ml-1 text-[#f4eeee]">
+                    Signin
+                  </h1>
+                </Link>
+              </div>
+            )}
+          </div>
 
         </div>
       </div>

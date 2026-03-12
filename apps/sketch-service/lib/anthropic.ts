@@ -1,31 +1,31 @@
+
 export interface ClaudeMessage {
   role: "user" | "assistant";
   content: string;
 }
 
 export async function askClaude(
-  messages: ClaudeMessage[],
-  system?: string
+  messages: ClaudeMessage[]
 ): Promise<string> {
-  const res = await fetch("https://api.anthropic.com/v1/messages", {
+
+  const res = await fetch("/api/claude", {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      model: "claude-sonnet-4-20250514",
-      max_tokens: 1000,
-      ...(system ? { system } : {}),
-      messages: messages.map((m) => ({ role: m.role, content: m.content })),
-    }),
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ messages }),
   });
 
-  if (!res.ok) throw new Error(`Claude API error: ${res.status}`);
+  if (!res.ok) {
+    throw new Error("AI request failed");
+  }
 
   const data = await res.json();
-  return (
-    data.content
-      ?.map((b: { type: string; text?: string }) =>
-        b.type === "text" ? b.text ?? "" : ""
-      )
-      .join("") ?? "Something went wrong — please try again."
-  );
+
+  const text =
+    data?.content
+      ?.map((c: any) => (c.type === "text" ? c.text : ""))
+      .join("") || "";
+
+  return text || "No response from Claude";
 }

@@ -1,7 +1,9 @@
 import { SignupRequest, SigninRequest, AuthResponse } from "@/types/auth-type";
+import {BACKEND_URL} from "../config"
+
 
 export async function signup(data: SignupRequest): Promise<AuthResponse> {
-  const res = await fetch("/api/auth/signup", {
+  const res = await fetch(`${BACKEND_URL}/api/v1/user/auth/signup`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -12,8 +14,9 @@ export async function signup(data: SignupRequest): Promise<AuthResponse> {
   return res.json();
 }
 
+
 export async function signin(data: SigninRequest): Promise<AuthResponse> {
-  const res = await fetch("/api/auth/signin", {
+  const res = await fetch(`${BACKEND_URL}/api/v1/user/auth/signin`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
