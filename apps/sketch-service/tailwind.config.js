@@ -6,7 +6,15 @@ export default {
     "./pages/**/*.{js,ts,jsx,tsx}"
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        gold: {
+          500: "#E6A800",
+          300: "#FFD700",
+          200:" #FFE082"
+        },
+      },
+    },
   },
   plugins: [],
 };

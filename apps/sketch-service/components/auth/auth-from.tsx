@@ -180,14 +180,14 @@ export default function AuthForm({ type }: AuthFormProps) {
             {type === "signin" ? (
               <div className="flex ml-7" >
                 Don't have an account? <Link href="/signup">
-                  <h1 className="font-mono ml-1 text-[#f4eeee]">
+                  <h1 className="font-mono ml-1 hover:text-yellow-500 text-[#f4eeee]">
                     Signup
                   </h1></Link>
               </div>
             ) : (
               <div className="flex ml-7">
                 Already have an account? <Link href="/signin">
-                  <h1 className="font-mono ml-1 text-[#f4eeee]">
+                  <h1 className="font-mono ml-1  hover:text-yellow-500  text-[#f4eeee]">
                     Signin
                   </h1>
                 </Link>
