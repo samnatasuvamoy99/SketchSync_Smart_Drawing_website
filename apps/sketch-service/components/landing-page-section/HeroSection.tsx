@@ -74,8 +74,7 @@ export function HeroSection() {
     left: "4%",
     width: 560,
     height: 560,
-    background:
-      "radial-gradient(circle, rgba(255,215,0,0.18) 0%, transparent 70%)",
+    background:"radial-gradient(circle, rgba(255,215,0,0.18) 0%, transparent 70%)",
     borderRadius: "50%",
     pointerEvents: "none",
   }}

@@ -2,11 +2,9 @@
 
 import { useEffect, useState, useRef } from "react";
 import { Sketch } from "@/draw-logic";
-import CanvasNavbar from "@/components/layout/navbar"
+import { SketchNavbar} from "@/components/layout/navbar"
 export default function Canvas() {
   // ref for Dom
-
-     
 
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [size, setSize] = useState({ width: 0, height: 0 })
@@ -30,7 +28,7 @@ export default function Canvas() {
 
 
   return <div>
-        <CanvasNavbar/>
+        <SketchNavbar/>
     <canvas ref={canvasRef} width={size.width} height={size.height}>
 
     </canvas>

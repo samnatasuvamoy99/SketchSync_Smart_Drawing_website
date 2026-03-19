@@ -1,14 +1,38 @@
+type Shape ={
+     type:"rectangle";
+     x:number;
+     y:number;
+     width:number;
+    height:number;
+
+} |{
+     type:"circle",
+     centerX:number;
+     centerY:number;
+     radius:number;
+
+} | {
+     type:"diamond",
+  ctx: CanvasRenderingContext2D,
+  x: number,
+  y: number,
+  size: number
+} | {
+   
+}
 
 export function Sketch(canvas: HTMLCanvasElement){
     const ctx = canvas.getContext("2d");
 
-          
+           
+    let existingShapes : Shape[] =[];
+
 
           if(!ctx){
              return;
           }
           ctx.fillStyle="rgba(0,0,0)";
-          ctx.fillRect(0,0,canvas.width , canvas.height);
+          ctx.fillRect(0, 0, canvas.width , canvas.height);
 
              // for click the mouse 
               let clicked = false;
