@@ -1,6 +1,11 @@
-import PageLayout from "./layout";
+import Layout from "./canvasfn";
+
 
 export default function dashboardSection(){
-  return <PageLayout />
+  return <div>
+          <Layout />
+         
+  </div>
+
   
 }

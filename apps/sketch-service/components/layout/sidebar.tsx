@@ -34,8 +34,11 @@ export function SketchSidebar() {
   ]
 
   return(
-       <div className="fixed top-0 left-0 w-full h-12 bg-[#2b2b2b] border-b border-neutral-700 flex-row items-center justify-between px-4 z-50" >
-            
+       <div className="fixed left-0 top-0 w-56 h-screen bg-[#686464] z-[999] p-4 shadow-xl" >
+
+                 <div className="text-white font-thin">
+                  hello
+                   </div>  
        </div>
   )
 

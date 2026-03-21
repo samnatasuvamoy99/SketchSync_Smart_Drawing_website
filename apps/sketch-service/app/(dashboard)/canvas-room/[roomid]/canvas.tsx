@@ -27,7 +27,7 @@ export default function Canvas() {
 
 
 
-  return <div>
+  return <div className=" h-screen w-screen bg-black">
         <SketchNavbar/>
     <canvas ref={canvasRef} width={size.width} height={size.height}>
 

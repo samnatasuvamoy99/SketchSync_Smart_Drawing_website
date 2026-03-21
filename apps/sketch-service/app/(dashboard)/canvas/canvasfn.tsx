@@ -1,8 +1,10 @@
 "use client"
 
-import { List, Pencil } from "lucide-react";
+import { Pencil, List } from "lucide-react";
 import { SketchNavbar } from "@/components/layout/navbar";
+import { SketchSidebar } from "@/components/layout/sidebar";
 import { useState } from "react";
+import MenuIcon from "./listicon";
 
 export default function Layout() {
   const [showPage, setShowPage] = useState(false);
@@ -29,13 +31,22 @@ export default function Layout() {
 
 
       <div className="relative z-[200] flex flex-col pt-16 pl-4">
-        <div
-          className="w-fit cursor-pointer text-white hover:text-yellow-400 transition-colors"
-          onClick={() => setShowPage(true)}
-        >
-          <List size={27} />
-        </div>
+
+        <List size={27} onClick={() => {
+          console.log("clicked");
+          setShowPage(prev => !prev)
+        }} className="text-white" />
+
+
+        {showPage && (
+          <div className="fixed top-0 left-0 bg-red-500 text-white z-[9999]">
+            WORKING
+          </div>
+        )}
+
       </div>
+
+
 
       <div className=" flex justify-center items-center mt-20 ">
         <div>
@@ -44,7 +55,7 @@ export default function Layout() {
       </div>
       <div className="flex justify-center items-center ">
         <div className="text-white font-semibold   font-mono text-2xl ">
-          Welcome Back,Suvamoy!
+          Welcome Back,Nabanita Bera!
 
         </div>
 
@@ -56,15 +67,13 @@ export default function Layout() {
         pick a shape,choose a color,and start drawing -or
         <br />
 
-         
+
         invite your team to sketch together i real time.
 
       </div>
 
-      <div className=" text-gold-200  underline-offset-8 uppercase pt-3 italic flex justify-center items-center text-2xl shadow-2xl opacity-25">
-        Click a shape above . drag to draw . Collaborate.
-
-         
+      <div className="text-gold-200 underline-offset-8 uppercase pt-3 italic flex justify-center items-center text-2xl shadow-2xl opacity-23">
+        𝓒𝓵𝓲𝓬𝓴 𝓪 𝓼𝓱𝓪𝓹𝓮 𝓪𝓫𝓸𝓿𝓮 · 𝓭𝓻𝓪𝓰 𝓽𝓸 𝓭𝓻𝓪𝔀 · 𝓬𝓸𝓵𝓵𝓪𝓫𝓸𝓻𝓪𝓽𝓮
       </div>
     </div>
   );

@@ -1,4 +1,3 @@
-"use client"
 
 import { useState } from 'react';
 import {
@@ -115,4 +114,4 @@ export  function SketchNavbar() {
 
     </div>
   )
-}
+}   

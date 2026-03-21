@@ -131,3 +131,6 @@ export function Navbar({ activeSection }: { activeSection: string }) {
     </nav>
   );
 }
+export default function Page() {
+  return <div<Canvas> />;
+}
