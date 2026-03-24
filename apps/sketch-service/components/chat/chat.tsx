@@ -1,0 +1,189 @@
+"use client";
+
+import { useState, useRef, useEffect } from "react";
+
+/* ─── Types ─────────────────────────────────────────── */
+interface Message {
+  id: string;
+  sender: string;
+  text: string;
+  isSelf: boolean;
+  isAI: boolean;
+}
+
+interface ChatCardProps {
+  roomName: string;
+  roomId?: string;
+  isOpen: boolean;
+  onClose?: () => void;
+}
+
+/* ─── Constants ─────────────────────────────────────── */
+const AVATAR_BG: Record<string, string> = {
+  M: "bg-blue-500",
+  J: "bg-green-500",
+  K: "bg-violet-400",
+  A: "bg-amber-400",
+};
+
+const SEED_MESSAGES: Message[] = [
+  { id: "1", sender: "Maya", text: "Check the left arc flow 🔥", isSelf: false, isAI: false },
+  { id: "2", sender: "You", text: "Looks great! Spacing is much better.", isSelf: true, isAI: false },
+];
+
+const uid = () => Math.random().toString(36).slice(2, 9);
+
+/* ─── Bubble: sent ───────────────────────────────────── */
+function SentBubble({ text }: { text: string }) {
+  return (
+    <div className="flex justify-end">
+      <div>
+        <p className="text-[8px] text-white/30 mb-0.5 text-right font-mono tracking-wide">
+          You
+        </p>
+        <div className="bg-gradient-to-br from-amber-400 to-amber-600 text-black text-[10px] italic leading-snug px-2.5 py-1.5 rounded-[10px_10px_2px_10px] max-w-[180px]">
+          {text}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Bubble: received ───────────────────────────────── */
+function ReceivedBubble({ sender, text }: { sender: string; text: string }) {
+  const bg = AVATAR_BG[sender[0]] ?? "bg-zinc-500";
+  const isAmber = bg === "bg-amber-400";
+
+  return (
+    <div className="flex gap-1.5 items-end">
+      <div
+        className={`w-[18px] h-[18px] rounded-full ${bg} flex items-center justify-center text-[7px] font-bold shrink-0 ${
+          isAmber ? "text-black" : "text-white"
+        }`}
+      >
+        {sender[0]}
+      </div>
+      <div>
+        <p className="text-[8px] text-white/30 mb-0.5 font-mono">{sender}</p>
+        <div className="bg-white/5 border border-white/[0.07] text-white/70 text-[10px] italic leading-snug px-2.5 py-1.5 rounded-[10px_10px_10px_2px] max-w-[180px]">
+          {text}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ─── Message Router ─────────────────────────────────── */
+function MsgBubble({ msg }: { msg: Message }) {
+  if (msg.isSelf) return <SentBubble text={msg.text} />;
+  return <ReceivedBubble sender={msg.sender} text={msg.text} />;
+}
+
+/* ─── ChatCard ───────────────────────────────────────── */
+export function ChatCard({ roomName, roomId, isOpen, onClose }: ChatCardProps) {
+  const [messages, setMessages] = useState<Message[]>(SEED_MESSAGES);
+  const [input, setInput] = useState("");
+  const [resolvedName, setResolvedName] = useState(roomName);
+  const bottomRef = useRef<HTMLDivElement>(null);
+
+  /* ── Hide if closed */
+  if (!isOpen) return null;
+
+  /* Fetch room name */
+  useEffect(() => {
+    if (!roomId) {
+      setResolvedName(roomName);
+      return;
+    }
+
+    fetch(`/api/rooms/${roomId}`)
+      .then((r) => r.json())
+      .then((d) => setResolvedName(d.name ?? roomName))
+      .catch(() => setResolvedName(roomName));
+  }, [roomId, roomName]);
+
+  /* Scroll */
+  useEffect(() => {
+    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [messages]);
+
+  /* ── SEND MESSAGE (UPDATED) */
+  const send = () => {
+    const t = input.trim();
+    if (!t) return;
+
+    setInput("");
+
+    // YOUR MESSAGE
+    setMessages((prev) => [
+      ...prev,
+      { id: uid(), sender: "You", text: t, isSelf: true, isAI: false },
+    ]);
+
+    // SIMULATED OTHER USER
+    setTimeout(() => {
+      setMessages((prev) => [
+        ...prev,
+        {
+          id: uid(),
+          sender: "Maya",
+          text: "Got it 👍",
+          isSelf: false,
+          isAI: false,
+        },
+      ]);
+    }, 800);
+  };
+
+  return (
+    <div className="w-[300px] flex flex-col bg-[#1C1C1C] border border-white/[0.09] rounded-2xl overflow-hidden shadow-2xl">
+
+      {/* ── HEADER ── */}
+      <div className="h-9 bg-[#161616] border-b border-white/[0.07] flex items-center gap-2 px-3">
+
+        <div className="flex gap-[5px]">
+          <span className="w-2.5 h-2.5 rounded-full bg-[#FF5F57]" />
+          <span className="w-2.5 h-2.5 rounded-full bg-[#FFBD2E]" />
+          <span className="w-2.5 h-2.5 rounded-full bg-[#28C840]" />
+        </div>
+
+        <span className="flex-1 text-center text-[10px] font-bold text-white/55 truncate font-mono">
+          {resolvedName}
+        </span>
+
+        <button
+          onClick={onClose}
+          className="text-white/40 hover:text-white text-xs"
+        >
+          ✕
+        </button>
+      </div>
+
+      {/* ── MESSAGES ── */}
+      <div className="h-[220px] overflow-y-auto flex flex-col gap-1.5 px-2.5 pt-2.5 pb-1">
+        {messages.map((m) => (
+          <MsgBubble key={m.id} msg={m} />
+        ))}
+        <div ref={bottomRef} />
+      </div>
+
+      {/* ── INPUT ── */}
+      <div className="flex items-center gap-1.5 p-2 bg-[#161616] border-t border-white/[0.07]">
+        <input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && send()}
+          placeholder="Message room…"
+          className="flex-1 bg-white/[0.05] border border-white/[0.08] rounded-lg px-2.5 py-1.5 text-[10px] text-white"
+        />
+        <button
+          onClick={send}
+          disabled={!input.trim()}
+          className="w-[26px] h-[26px] rounded-lg bg-gradient-to-br from-amber-400 to-amber-600 text-black text-[11px] flex items-center justify-center"
+        >
+          ↑
+        </button>
+      </div>
+    </div>
+  );
+}

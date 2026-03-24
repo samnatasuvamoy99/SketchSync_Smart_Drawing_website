@@ -1,36 +1,36 @@
+
+
 "use client";
 
-import { useEffect, useState, useRef } from "react";
-import { Sketch } from "@/draw-logic";
-import { SketchNavbar} from "@/components/layout/navbar"
+import { useState } from "react";
+import { SketchNavbar } from "@/components/layout/navbar";
+import { SketchSidebar } from "@/components/layout/sidebar";
+import { List } from "lucide-react";
+import DrawingCanvas from "../drawingcanvas"; // 👈 separate component
+
 export default function Canvas() {
-  // ref for Dom
+  const [showPage, setShowPage] = useState(false);
 
-  const canvasRef = useRef<HTMLCanvasElement>(null);
-  const [size, setSize] = useState({ width: 0, height: 0 })
-
-  //useEffect Runs after the component mounts.
-  useEffect(() => {
-      setSize({
-      width: window.innerWidth,
-      height: window.innerHeight
-    })
-    //mounts logic
-
-    if (canvasRef.current) {
-      const canvas = canvasRef.current;
-      Sketch(canvas);
-
-    }
-
-  }, [canvasRef])
+  return (
+    <div className="h-screen w-screen fixed bg-black overflow-hidden">
+      <SketchNavbar />
 
 
+      <div className="pt-16 pl-4 absolute z-20">
+        <button
+          onClick={() => setShowPage((prev) => !prev)}
+          className="text-white hover:text-yellow-400 transition"
+        >
+          <List size={25} />
+        </button>
+      </div>
 
-  return <div className=" h-screen w-screen bg-black">
-        <SketchNavbar/>
-    <canvas ref={canvasRef} width={size.width} height={size.height}>
+      <SketchSidebar
+        isOpen={showPage}
+        onClose={() => setShowPage(false)}
+      />
 
-    </canvas>
-  </div>
+      <DrawingCanvas />
+    </div>
+  );
 }

@@ -5,7 +5,7 @@ import { createRoomController ,chatAllMessages , roomIdFromSlug} from "../contro
 const roomRouter :Router = express.Router();
 
 roomRouter.post("/create-room",AuthMiddleware,createRoomController);
-roomRouter.get("/chats/:roomId" , AuthMiddleware, chatAllMessages );
-roomRouter.get("chatroom/:slugName" ,AuthMiddleware , roomIdFromSlug);
+roomRouter.get("/chats/:roomId" , AuthMiddleware, chatAllMessages ); // take  all messages
+roomRouter.get("chatroom/:slugName" ,AuthMiddleware , roomIdFromSlug); //room-name
 
 export default roomRouter;
