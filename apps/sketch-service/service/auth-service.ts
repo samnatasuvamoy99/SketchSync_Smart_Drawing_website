@@ -21,8 +21,18 @@ export async function signin(data: SigninRequest): Promise<AuthResponse> {
     headers: {
       "Content-Type": "application/json",
     },
+    credentials:"include",
     body: JSON.stringify(data),
   });
 
-  return res.json();
+  // return res;
+  
+  const result = await res.json();
+
+  // store token
+  if( result.token){
+      localStorage.setItem("token",result.token);
+  }
+
+  return result;
 }

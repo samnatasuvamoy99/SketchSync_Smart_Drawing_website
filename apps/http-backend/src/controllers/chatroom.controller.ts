@@ -58,7 +58,6 @@ export const createRoomController = async (
 };
 
 //find roomId from slug
- 
 export const roomIdFromSlug = async (req: Request, res: Response) => {
   try {
     

@@ -1,5 +1,4 @@
 "use client";
-
 import { useEffect, useRef } from "react";
 import { Sketch } from "@/draw-logic";
 

@@ -20,7 +20,7 @@ export default function AuthForm({ type }: AuthFormProps) {
 
   const router = useRouter();
 
-  // pass the auth data from backend 
+  // pass the auth data -> backend 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -33,10 +33,12 @@ export default function AuthForm({ type }: AuthFormProps) {
 
       }
       else {
-        response = await signin({ email, password });
+      const  response = await signin({ email, password });
         alert("Signin successfully completed...!");
-        router.push("/dashboard");
 
+        router.push("/dashboard");  // after signin -> dashboard
+      
+       
 
       }
       console.log(response);
