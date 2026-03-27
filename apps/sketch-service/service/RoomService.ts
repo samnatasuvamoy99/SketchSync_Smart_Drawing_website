@@ -1,4 +1,4 @@
-import { CreateRoomResponse, JoinRoomResponse } from '../types/room-type';
+import { CreateRoomResponse, JoinRoomResponse } from '../types/RoomType';
 
 
 /** Generates a local room ID (used as fallback if API is offline) */

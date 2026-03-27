@@ -1,8 +1,8 @@
 import { useState } from "react";
-import { JoinRoomResponse } from "@/types/room-type";
+import { JoinRoomResponse } from "@/types/RoomType";
 import { Spinner} from "@/public/spiner";
 import { StatusBadge } from "@/public/statusbadge";
-import { apiJoinRoom } from "@/service/room-service";
+import { apiJoinRoom } from "@/service/RoomService";
 
 
 

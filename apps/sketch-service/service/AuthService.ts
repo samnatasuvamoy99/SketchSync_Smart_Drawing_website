@@ -1,4 +1,4 @@
-import { SignupRequest, SigninRequest, AuthResponse } from "@/types/auth-type";
+import { SignupRequest, SigninRequest, AuthResponse } from "@/types/AuthType";
 import {BACKEND_URL} from "../config"
 
 

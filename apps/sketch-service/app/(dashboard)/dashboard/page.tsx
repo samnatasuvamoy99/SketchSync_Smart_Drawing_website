@@ -1,5 +1,12 @@
-import Layout from "./layout";
 
-export default function DashboardSection() {
-  return <Layout/>
+import { RoomCard } from "@/components/room/RoomCard";
+
+
+
+export default function page() {
+  return (
+    <div className="h-screen w-screen bg-black">
+          <RoomCard/>
+    </div>
+  )
 }

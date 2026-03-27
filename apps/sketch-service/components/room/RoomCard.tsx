@@ -2,9 +2,9 @@
 
 
 import { useState } from "react";
-import { RoomCardProps } from "@/types/room-type";
-import { GenerateSection } from "./generateRoom";
-import { JoinSection } from "./joinRoom";
+import { RoomCardProps } from "@/types/RoomType";
+import { GenerateSection } from "./GenerateRoom";
+import { JoinSection } from "./JoinRoom";
 
 
 

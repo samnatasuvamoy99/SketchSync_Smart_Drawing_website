@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { StatusBadge } from "@/public/statusbadge";
 import { Spinner } from "@/public/spiner";
-import { CreateRoomResponse } from "@/types/room-type";
-import { apiCreateRoom } from "@/service/room-service";
+import { CreateRoomResponse } from "@/types/RoomType";
+import { apiCreateRoom } from "@/service/RoomService";
 
 
 export function GenerateSection({

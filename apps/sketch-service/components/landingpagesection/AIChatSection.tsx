@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect, useRef, KeyboardEvent } from "react";
 import { Button, Card, Badge } from "@repo/ui";
-import { askClaude, ClaudeMessage } from "@/lib/anthropic";
+import { askClaude, ClaudeMessage } from "@/lib/Anthropic";
 
 const SYSTEM_PROMPT = `You are SketchSync AI — the intelligent assistant for SketchSync, a real-time collaborative drawing platform. Help users with: platform features, drawing tools, real-time collaboration, AI describer, messaging, design tips, sketching techniques, and team workflows. Be concise, warm, and slightly creative. Use short paragraphs. No markdown headers. Use ✦ sparingly.`;
 

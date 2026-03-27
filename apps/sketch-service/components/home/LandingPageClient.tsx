@@ -7,7 +7,7 @@ import {
   FeaturesSection,
   AIChatSection,
   PricingFooter,
-} from "../landing-page-section";
+} from "../landingpagesection";
 
 const SECTIONS = ["hero", "features", "aichat", "pricing"] as const;
 

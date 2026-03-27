@@ -2,8 +2,8 @@
 import { useState } from "react";
 import { Button, Badge, Card } from "@repo/ui";
 import { LiveSketchCanvas } from "@repo/ui";
-import { useTypewriter } from "@/hooks/useTypewriter";
-import { askClaude } from "@/lib/anthropic";
+import { useTypewriter } from "@/hooks/UseTypewriter";
+import { askClaude } from "@/lib/Anthropic";
 
 const TYPEWRITER_TEXTS = [
   "Draw Together.",
@@ -125,7 +125,7 @@ export function HeroSection() {
           >
             Sketch.
             <br />
-            <span className="gradient-text">Sync.</span>
+            <span className="gradient-text">Link.</span>
             <br />
             <span
               style={{

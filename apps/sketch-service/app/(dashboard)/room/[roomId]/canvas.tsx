@@ -2,8 +2,8 @@
 "use client";
 
 import { useState } from "react";
-import { SketchNavbar } from "@/components/layout/navbar";
-import { SketchSidebar } from "@/components/layout/sidebar";
+import { SketchNavbar } from "@/components/layout/Navbar";
+import { SketchSidebar } from "@/components/layout/Sidebar";
 import { List } from "lucide-react";
 import DrawingCanvas from "./canvas-area"; //
 

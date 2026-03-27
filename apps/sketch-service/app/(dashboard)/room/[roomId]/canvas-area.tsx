@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
-import { Sketch } from "@/draw-logic";
+import { Sketch } from "@/drawlogic/DiffShapes";
 
 export default function DrawingCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);

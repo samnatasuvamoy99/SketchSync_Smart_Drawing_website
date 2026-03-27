@@ -4,12 +4,5 @@ import Canvas from "./canvas"
 
 
 export default function page(){
-           
-        
-             return <Canvas/>
-
-             
-        
-      
-    
+    return <Canvas/> 
 }

@@ -1,77 +1,18 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import { ChatCardProps , Message } from "@/types/ChatType";
+import { SentBubble } from "./SentBubble";
+import  {ReceivedBubble} from "./ReceivedBubble"
 
-/* ─── Types ─────────────────────────────────────────── */
-interface Message {
-  id: string;
-  sender: string;
-  text: string;
-  isSelf: boolean;
-  isAI: boolean;
-}
-
-interface ChatCardProps {
-  roomName: string;
-  roomId?: string;
-  isOpen: boolean;
-  onClose?: () => void;
-}
-
-/* ─── Constants ─────────────────────────────────────── */
-const AVATAR_BG: Record<string, string> = {
-  M: "bg-blue-500",
-  J: "bg-green-500",
-  K: "bg-violet-400",
-  A: "bg-amber-400",
-};
 
 const SEED_MESSAGES: Message[] = [
   { id: "1", sender: "Maya", text: "Check the left arc flow 🔥", isSelf: false, isAI: false },
   { id: "2", sender: "You", text: "Looks great! Spacing is much better.", isSelf: true, isAI: false },
 ];
-
 const uid = () => Math.random().toString(36).slice(2, 9);
 
-/* ─── Bubble: sent ───────────────────────────────────── */
-function SentBubble({ text }: { text: string }) {
-  return (
-    <div className="flex justify-end">
-      <div>
-        <p className="text-[8px] text-white/30 mb-0.5 text-right font-mono tracking-wide">
-          You
-        </p>
-        <div className="bg-gradient-to-br from-amber-400 to-amber-600 text-black text-[10px] italic leading-snug px-2.5 py-1.5 rounded-[10px_10px_2px_10px] max-w-[180px]">
-          {text}
-        </div>
-      </div>
-    </div>
-  );
-}
 
-/* ─── Bubble: received ───────────────────────────────── */
-function ReceivedBubble({ sender, text }: { sender: string; text: string }) {
-  const bg = AVATAR_BG[sender[0]] ?? "bg-zinc-500";
-  const isAmber = bg === "bg-amber-400";
-
-  return (
-    <div className="flex gap-1.5 items-end">
-      <div
-        className={`w-[18px] h-[18px] rounded-full ${bg} flex items-center justify-center text-[7px] font-bold shrink-0 ${
-          isAmber ? "text-black" : "text-white"
-        }`}
-      >
-        {sender[0]}
-      </div>
-      <div>
-        <p className="text-[8px] text-white/30 mb-0.5 font-mono">{sender}</p>
-        <div className="bg-white/5 border border-white/[0.07] text-white/70 text-[10px] italic leading-snug px-2.5 py-1.5 rounded-[10px_10px_10px_2px] max-w-[180px]">
-          {text}
-        </div>
-      </div>
-    </div>
-  );
-}
 
 /* ─── Message Router ─────────────────────────────────── */
 function MsgBubble({ msg }: { msg: Message }) {
@@ -127,7 +68,7 @@ export function ChatCard({ roomName, roomId, isOpen, onClose }: ChatCardProps) {
         {
           id: uid(),
           sender: "Maya",
-          text: "Got it 👍",
+          text: "Got it ",
           isSelf: false,
           isAI: false,
         },
@@ -138,7 +79,7 @@ export function ChatCard({ roomName, roomId, isOpen, onClose }: ChatCardProps) {
   return (
     <div className="w-[300px] flex flex-col bg-[#1C1C1C] border border-white/[0.09] rounded-2xl overflow-hidden shadow-2xl">
 
-      {/* ── HEADER ── */}
+      //HEADER 
       <div className="h-9 bg-[#161616] border-b border-white/[0.07] flex items-center gap-2 px-3">
 
         <div className="flex gap-[5px]">
@@ -159,7 +100,7 @@ export function ChatCard({ roomName, roomId, isOpen, onClose }: ChatCardProps) {
         </button>
       </div>
 
-      {/* ── MESSAGES ── */}
+      //MESSAGES 
       <div className="h-[220px] overflow-y-auto flex flex-col gap-1.5 px-2.5 pt-2.5 pb-1">
         {messages.map((m) => (
           <MsgBubble key={m.id} msg={m} />
@@ -167,7 +108,7 @@ export function ChatCard({ roomName, roomId, isOpen, onClose }: ChatCardProps) {
         <div ref={bottomRef} />
       </div>
 
-      {/* ── INPUT ── */}
+      //INPUT 
       <div className="flex items-center gap-1.5 p-2 bg-[#161616] border-t border-white/[0.07]">
         <input
           value={input}
