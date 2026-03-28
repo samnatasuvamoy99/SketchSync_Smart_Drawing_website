@@ -15,13 +15,16 @@ export interface JoinRoomResponse {
 }
 
 export interface RoomCardProps {
-  /** Called when room is successfully created */
+  /** room is successfully created */
 
   onRoomCreated?: (room: CreateRoomResponse) => void;
 
-  /** Called when user successfully joins a room */
+  /** user successfully joins a room */
   
   onRoomJoined?: (data: JoinRoomResponse) => void;
   /** Override default API base — useful for mock/testing */
   apiBase?: string;
+
+  isOpen: boolean;
+  onClose?: () => void;
 }

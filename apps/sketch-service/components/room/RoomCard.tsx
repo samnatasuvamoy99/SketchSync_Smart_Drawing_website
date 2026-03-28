@@ -1,6 +1,5 @@
 "use client";
 
-
 import { useState } from "react";
 import { RoomCardProps } from "@/types/RoomType";
 import { GenerateSection } from "./GenerateRoom";
@@ -50,12 +49,12 @@ export function RoomCard({
             <span className="w-2.5 h-2.5 rounded-full bg-[#28C840] block" />
           </div>
           <span className="flex-1 text-center text-[10px] font-bold text-white/50 tracking-wide">
-            SketchIync · Rooms
+            Sketch Link · Rooms
           </span>
           <span className="w-[5px] h-[5px] rounded-full bg-green-400 shrink-0 animate-pulse" />
         </div>
 
-        {/* ── TAB SWITCHER ────────────────────────────────── */}
+        {/* // TAB SWITCHER  */}
         <div className="flex border-b border-white/[0.07] shrink-0">
           {(["create", "join"] as const).map((t) => (
             <button
@@ -75,7 +74,7 @@ export function RoomCard({
           ))}
         </div>
 
-        {/* ── CONTENT ─────────────────────────────────────── */}
+        {/* //Content */}
         <div className="p-4 flex flex-col gap-4 overflow-y-auto max-h-[420px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {tab === "create" ? (
             <GenerateSection
@@ -90,14 +89,14 @@ export function RoomCard({
           )}
         </div>
 
-        {/* ── FOOTER ──────────────────────────────────────── */}
+        {/* //FOOTER ─ */}
         <div className="px-4 py-2.5 border-t border-white/[0.06] bg-[#161616] flex items-center justify-between shrink-0">
           <span className="text-[9px] text-white/20 font-mono">
-            SketchSInc v1 · Rooms
+            Sketch Link. Rooms
           </span>
           <button
             onClick={() => setTab(tab === "create" ? "join" : "create")}
-            className="text-[9px] text-amber-400/60 font-mono hover:text-amber-400 transition-colors"
+            className="text-[9px] text-white/20 font-mono hover:text-amber-400 transition-colors"
           >
             {tab === "create" ? "Already have a room ID? →" : "← Create new room"}
           </button>

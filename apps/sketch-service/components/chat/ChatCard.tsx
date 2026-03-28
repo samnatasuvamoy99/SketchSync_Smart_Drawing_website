@@ -1,27 +1,23 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { ChatCardProps , Message } from "@/types/ChatType";
-import { SentBubble } from "./SentBubble";
-import  {ReceivedBubble} from "./ReceivedBubble"
+import { ChatCardProps, Message} from "@/types/ChatType";
+import { MsgBubble } from "./MsgBubble";
 
 
 const SEED_MESSAGES: Message[] = [
   { id: "1", sender: "Maya", text: "Check the left arc flow 🔥", isSelf: false, isAI: false },
   { id: "2", sender: "You", text: "Looks great! Spacing is much better.", isSelf: true, isAI: false },
 ];
+
 const uid = () => Math.random().toString(36).slice(2, 9);
 
 
 
-/* ─── Message Router ─────────────────────────────────── */
-function MsgBubble({ msg }: { msg: Message }) {
-  if (msg.isSelf) return <SentBubble text={msg.text} />;
-  return <ReceivedBubble sender={msg.sender} text={msg.text} />;
-}
+// ChatCard 
+export function ChatCard({ roomName, roomId, isOpen, onClose}: ChatCardProps) {
 
-/* ─── ChatCard ───────────────────────────────────────── */
-export function ChatCard({ roomName, roomId, isOpen, onClose }: ChatCardProps) {
+
   const [messages, setMessages] = useState<Message[]>(SEED_MESSAGES);
   const [input, setInput] = useState("");
   const [resolvedName, setResolvedName] = useState(roomName);
@@ -30,23 +26,24 @@ export function ChatCard({ roomName, roomId, isOpen, onClose }: ChatCardProps) {
   /* ── Hide if closed */
   if (!isOpen) return null;
 
-  /* Fetch room name */
-  useEffect(() => {
-    if (!roomId) {
-      setResolvedName(roomName);
-      return;
-    }
+  // /* Fetch room name */
+  // useEffect(() => {
+  //   if (!roomId) {
+  //     setResolvedName(roomName);
+  //     return;
+  //   }
 
-    fetch(`/api/rooms/${roomId}`)
-      .then((r) => r.json())
-      .then((d) => setResolvedName(d.name ?? roomName))
-      .catch(() => setResolvedName(roomName));
-  }, [roomId, roomName]);
+  //   fetch(`/api/rooms/${roomId}`)
+  //     .then((r) => r.json())
+  //     .then((d) => setResolvedName(d.name ?? roomName))
+  //     .catch(() => setResolvedName(roomName));
+  // }, [roomId, roomName]);
+
 
   /* Scroll */
-  useEffect(() => {
-    bottomRef.current?.scrollIntoView({ behavior: "smooth" });
-  }, [messages]);
+  // useEffect(() => {
+  //   bottomRef.current?.scrollIntoView({ behavior: "smooth" });
+  // }, [messages]);
 
   /* ── SEND MESSAGE (UPDATED) */
   const send = () => {
@@ -77,9 +74,9 @@ export function ChatCard({ roomName, roomId, isOpen, onClose }: ChatCardProps) {
   };
 
   return (
-    <div className="w-[300px] flex flex-col bg-[#1C1C1C] border border-white/[0.09] rounded-2xl overflow-hidden shadow-2xl">
+    <div className="w-[300px] h-[400px] flex  mt-96 mb-2.5  flex-col bg-[#1C1C1C] border border-white/[0.09] rounded-2xl overflow-hidden shadow-2xl">
 
-      //HEADER 
+      {/* //HEADER  */}
       <div className="h-9 bg-[#161616] border-b border-white/[0.07] flex items-center gap-2 px-3">
 
         <div className="flex gap-[5px]">
@@ -100,15 +97,15 @@ export function ChatCard({ roomName, roomId, isOpen, onClose }: ChatCardProps) {
         </button>
       </div>
 
-      //MESSAGES 
-      <div className="h-[220px] overflow-y-auto flex flex-col gap-1.5 px-2.5 pt-2.5 pb-1">
+      {/* //MESSAGES  */}
+      <div className="h-[318px] overflow-y-auto flex flex-col gap-1.5 px-2.5 pt-2.5 pb-1">
         {messages.map((m) => (
           <MsgBubble key={m.id} msg={m} />
         ))}
         <div ref={bottomRef} />
       </div>
 
-      //INPUT 
+      {/* //INPUT  */}
       <div className="flex items-center gap-1.5 p-2 bg-[#161616] border-t border-white/[0.07]">
         <input
           value={input}

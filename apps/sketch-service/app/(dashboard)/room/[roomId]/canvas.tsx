@@ -1,13 +1,14 @@
 
 "use client";
-
 import { useState } from "react";
 import { SketchNavbar } from "@/components/layout/Navbar";
 import { SketchSidebar } from "@/components/layout/Sidebar";
 import { List } from "lucide-react";
-import DrawingCanvas from "./canvas-area"; //
+import DrawingCanvas from "../../../../components/canvas/CanvasArea"; //
 
-export default function Canvas() {
+
+
+export  function Canvas() {
   const [showPage, setShowPage] = useState(false);
 
   return (

@@ -1,21 +1,18 @@
 
 import { useState } from 'react';
-import {
-  Pencil,
-  Square,
-  Circle,
-  Diamond,
-  ArrowRight,
-  Minus,
-  Users,
-  Eraser
-} from "lucide-react"
+import {Pencil,Square, Circle, Diamond, ArrowRight, Minus, Users, Eraser} from "lucide-react"
+import { ChatCard } from '../chat/ChatCard';
+
+
 
 // import 
 export  function SketchNavbar() {
 
   const [activeTool, setActiveTool] = useState("pen")
   const [strokeStyle, setStrokeStyle] = useState("solid")
+   const [showChat, setShowChat] = useState(false);
+
+
 
   const tools = [
     { id: "pen", icon: <Pencil size={18} /> },
@@ -43,7 +40,7 @@ export  function SketchNavbar() {
         </div>
 
         <span className="text-white font-semibold text-sm">
-          SketchSync
+          Sketch Link
         </span>
       </div>
 
@@ -95,10 +92,12 @@ export  function SketchNavbar() {
 
       <div className="flex gap-8">
 
-        <button className="gap-1 p-1 w-auto h-8 flex items-center justify-center 
+        <button  
+         onClick={()=> setShowChat( prev => !prev)}
+        className="gap-1 p-1 w-auto h-8 flex items-center justify-center 
         bg-[#2b2b2b] 
         border border-neutral-600 
-       
+        
         rounded-md 
         text-white
         hover:bg-neutral-700 
@@ -107,6 +106,18 @@ export  function SketchNavbar() {
           Collaborate
         </button>
 
+
+{/* ChatCard render */}
+       
+        <ChatCard
+        roomId='34gftdnjdd786bbsbdjwj'
+        roomName='suvamoy98'
+        isOpen={showChat}
+        onClose={() => setShowChat(false)}
+     />
+     
+    
+          
         <div className="w-7 h-7 md:1 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold">
           A
         </div>

@@ -1,3 +1,4 @@
+'use client'
 //  Bubble: sent 
  export function SentBubble({ text }: { text: string }) {
   return (

@@ -31,7 +31,7 @@ export default function DrawingCanvas() {
     };
 
     setupCanvas();
-    Sketch(canvas); 
+    Sketch(canvas);  //for diff types of shapes  
 
     const handleResize = () => {
       setupCanvas();

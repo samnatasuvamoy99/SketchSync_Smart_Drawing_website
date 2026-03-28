@@ -1,7 +1,5 @@
-"use client"
-import Canvas from "./canvas"
 
-
+import { Canvas } from "./Canvas"
 
 export default function page(){
     return <Canvas/> 

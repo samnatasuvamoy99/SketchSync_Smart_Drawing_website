@@ -19,17 +19,16 @@ export async function signin(data: SigninRequest): Promise<AuthResponse> {
   const res = await fetch(`${BACKEND_URL}/api/v1/user/auth/signin`, {
     method: "POST",
     headers: {
-      "Content-Type": "application/json",
+    "Content-Type": "application/json",
     },
     credentials:"include",
     body: JSON.stringify(data),
   });
 
   // return res;
-  
-  const result = await res.json();
+   const result = await res.json();
 
-  // store token
+  // store token  in localStorage
   if( result.token){
       localStorage.setItem("token",result.token);
   }

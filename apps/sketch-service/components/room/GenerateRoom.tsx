@@ -60,7 +60,7 @@ export function GenerateSection({
         className="
           w-full py-2.5 rounded-lg font-mono text-[11px] font-bold
           tracking-widest uppercase
-          bg-gradient-to-br from-amber-400 to-amber-600 text-black
+          bg-white/[0.04] border border-white/[0.08] text-white
           hover:opacity-90 active:scale-[0.98]
           disabled:opacity-40 disabled:cursor-not-allowed
           transition-all duration-150 flex items-center justify-center gap-2
