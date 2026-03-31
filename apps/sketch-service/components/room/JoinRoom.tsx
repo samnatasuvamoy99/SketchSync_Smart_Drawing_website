@@ -8,10 +8,10 @@ import { apiJoinRoom } from "@/service/RoomService";
 
 
 export function JoinSection({
-  apiBase,
+
   onJoined,
 }: {
-  apiBase: string;
+  
   onJoined: (r: JoinRoomResponse) => void;
 }) {
   const [roomId,  setRoomId]  = useState("");
@@ -24,7 +24,7 @@ export function JoinSection({
     if (!id) { setError("Paste a Room ID."); return; }
     setError(""); setLoading(true); setResult(null);
     try {
-      const data = await apiJoinRoom(id, apiBase);
+      const data = await apiJoinRoom(id);
       setResult(data);
       onJoined(data);
     } catch (e: any) {

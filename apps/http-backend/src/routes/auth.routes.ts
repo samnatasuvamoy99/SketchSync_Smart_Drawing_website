@@ -1,5 +1,6 @@
 import express, { Router } from "express";
-import { signupController ,signinController} from "../controllers/auth.controller.js";
+import { AuthMiddleware } from "../middleware/auth.middleware.js";
+import { signupController ,signinController , currentUser} from "../controllers/auth.controller.js";
 
 const userRouter: Router = express.Router();
 
@@ -9,8 +10,10 @@ userRouter.get("/test", (req, res) => {
   res.json(req.cookies);
 });
 
+
 userRouter.post("/signup", signupController);
 userRouter.post("/signin" ,signinController );
+userRouter.get("/api/me",AuthMiddleware, currentUser);
 
 export default userRouter;
 

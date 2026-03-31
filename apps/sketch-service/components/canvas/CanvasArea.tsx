@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
-import { Sketch } from "@/drawlogic/DiffShapes";
+import { Sketch } from "@/drawservice/DiffShapes";
 
 export default function DrawingCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -9,10 +9,13 @@ export default function DrawingCanvas() {
   useEffect(() => {
     if (initialized.current) return;
 
-    const canvas = canvasRef.current;
+    const canvas = canvasRef.current; // ref the current shapes from canvas
+
     if (!canvas) return;
 
     const setupCanvas = () => {
+
+      //canvas display setting
       const dpr = window.devicePixelRatio || 1;
       const rect = canvas.getBoundingClientRect();
 

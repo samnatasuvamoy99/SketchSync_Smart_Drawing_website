@@ -4,6 +4,8 @@ import { useState, ReactNode } from "react";
 import {Layers, Sparkles, Download, History,Hexagon, X, RotateCcw} from "lucide-react";
 import { SidebarProps } from "@/types/Sidebarprops";
 import { PanelButton } from "./SidebarPanelButton";
+import { RoomCard } from "../room/RoomCard";
+
 
 
 /* ─── Types */
@@ -131,7 +133,7 @@ export function SketchSidebar({
 
         <Divider />
 
-        {/* Actions */}
+      
         
         <button
           onClick={onReset}

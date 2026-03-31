@@ -38,8 +38,6 @@ export default function AuthForm({ type }: AuthFormProps) {
 
         router.push("/dashboard");  // after signin -> dashboard
       
-       
-
       }
       console.log(response);
     } catch (error) {

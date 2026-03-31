@@ -25,10 +25,16 @@ function Divider({ label }: { label: string }) {
 export function RoomCard({
   onRoomCreated,
   onRoomJoined,
-  apiBase = "",
+  
+  onClose,
+  isOpen
 }: RoomCardProps) {
   const [tab, setTab] = useState<"create" | "join">("create");
+   
+  //  check isopen or not 
+  if(!isOpen){ return null;}
 
+  
   return (
     <>
       <style>{`
@@ -78,12 +84,12 @@ export function RoomCard({
         <div className="p-4 flex flex-col gap-4 overflow-y-auto max-h-[420px] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {tab === "create" ? (
             <GenerateSection
-              apiBase={apiBase}
+             
               onCreated={(room) => onRoomCreated?.(room)}
             />
           ) : (
             <JoinSection
-              apiBase={apiBase}
+         
               onJoined={(data) => onRoomJoined?.(data)}
             />
           )}

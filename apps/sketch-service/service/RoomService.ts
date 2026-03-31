@@ -1,49 +1,55 @@
-import { CreateRoomResponse, JoinRoomResponse } from '../types/RoomType';
 
-
-/** Generates a local room ID (used as fallback if API is offline) */
-const localUID = () =>
-  "ROOM-" +
-  Math.random().toString(36).slice(2, 6).toUpperCase() +
-  "-" +
-  Math.random().toString(36).slice(2, 6).toUpperCase();
+import { CreateRoomResponse, JoinRoomResponse, FetchMessageResponse, BackendMessage } from '../types/RoomType';
+import { BACKEND_URL, FRONTEND_URL } from '../config';
+import { Message } from '../types/ChatType';
+import { getCurrentUser } from "./getCurrentUser"
 
 
 
-/* ─────────────────────────────────────────────────────────
-   SUB-COMPONENTS
-───────────────────────────────────────────────────────── */
 
 
 export async function apiCreateRoom(
-  name: string,
-  base: string
-): Promise<CreateRoomResponse> {
-  // Uncomment below for real API call:
-  // const res = await fetch(`${base}/api/rooms`, {
-  //   method: "POST",
-  //   headers: { "Content-Type": "application/json" },
-  //   body: JSON.stringify({ name }),
-  // });
-  // if (!res.ok) throw new Error("Failed to create room");
-  // return res.json();
+  roomName: string,
 
-  // ── MOCK ──
+): Promise<CreateRoomResponse> {
+
+  const res = await fetch(`${BACKEND_URL}/message/v2/admin/chat/create-room`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify({ roomName }),
+  });
+  if (!res.ok) throw new Error("Failed to create room");
+
+
+  // return res.json();
+  const result = await res.json();
+  console.log(result.id);
+
+  if (!FRONTEND_URL) {
+    throw new Error("FRONTEND_URL is not defined");
+  }
+
   await new Promise((r) => setTimeout(r, 800));
-  const id = localUID();
+  const id = result.roomId;
+  alert(result.message);
+
   return {
     id,
-    name,
-    link: `sketching.link/room/${id.toLowerCase()}`,
+    roomName,
+    link: `${FRONTEND_URL}/room/${id}`,
     createdAt: new Date().toISOString(),
-    membersOnline: 1,
+    membersOnline: 23
+
   };
 }
 
+
+
 /** Simulated API: join room */
- export async function apiJoinRoom(
+export async function apiJoinRoom(
   roomId: string,
-  base: string
+
 ): Promise<JoinRoomResponse> {
   // Uncomment below for real API call:
   // const res = await fetch(`${base}/api/rooms/join`, {
@@ -66,3 +72,31 @@ export async function apiCreateRoom(
   };
 }
 
+
+/** Simulated API: fetch messages for a room */
+export async function FetchMessages(data: BackendMessage): Promise<Message[]> {
+  const res = await fetch(
+    `${BACKEND_URL}/message/v2/admin/chat/chats/${data.roomId}`,
+    {
+      method: "GET",
+      credentials: "include", // if using auth cookies
+    }
+  );
+
+  if (!res.ok) {
+    throw new Error("Failed to fetch messages");
+  }
+
+  const result: FetchMessageResponse = await res.json();
+
+  const currentUserId = await getCurrentUser(); // get the current userId;
+
+
+  return result.messages.map((msg) => ({
+    id: msg.id,
+    sender: msg.userId,
+    text: msg.message,
+    isSelf: msg.userId === currentUserId,  // if msg.userId === currentUserId( get this  through the login details in browsers); that;s mean 
+    createdAt: msg.createdAt, // optional
+  }));
+}

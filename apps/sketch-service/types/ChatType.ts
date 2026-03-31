@@ -1,9 +1,9 @@
  export interface Message {
-  id: string;
+  id:string;
   sender: string;
   text: string;
   isSelf: boolean;
-  isAI: boolean;
+ 
 }
 
 export interface ChatCardProps {

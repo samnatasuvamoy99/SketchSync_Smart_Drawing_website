@@ -7,7 +7,6 @@ import { List } from "lucide-react";
 import DrawingCanvas from "../../../../components/canvas/CanvasArea"; //
 
 
-
 export  function Canvas() {
   const [showPage, setShowPage] = useState(false);
 
@@ -21,7 +20,7 @@ export  function Canvas() {
           onClick={() => setShowPage((prev) => !prev)}
           className="text-white hover:text-yellow-400 transition"
         >
-          <List size={25} />
+          <List size={23} />
         </button>
       </div>
 

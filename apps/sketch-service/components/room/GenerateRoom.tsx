@@ -5,26 +5,26 @@ import { CreateRoomResponse } from "@/types/RoomType";
 import { apiCreateRoom } from "@/service/RoomService";
 
 
+
 export function GenerateSection({
-  apiBase,
-  onCreated,
+ onCreated,
 }: {
-  apiBase: string;
+ 
   onCreated: (r: CreateRoomResponse) => void;
 }) {
-  const [name,    setName]    = useState("");
+  const [roomName,    setroomName]    = useState("");
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState("");
   const [result,  setResult]  = useState<CreateRoomResponse | null>(null);
 
   const generate = async () => {
-    const n = name.trim();
+    const n = roomName.trim();
     if (!n) { setError("Enter a room name first."); 
       return; 
     }
     setError(""); setLoading(true); setResult(null);
     try {
-      const room = await apiCreateRoom(n, apiBase);
+      const room = await apiCreateRoom(roomName);
       setResult(room);
       onCreated(room);
     } catch (e: any) {
@@ -40,8 +40,8 @@ export function GenerateSection({
           Room Name
         </label>
         <input
-          value={name}
-          onChange={(e) => { setName(e.target.value); setError(""); setResult(null); }}
+          value={roomName}
+          onChange={(e) => { setroomName(e.target.value); setError(""); setResult(null); }}
           onKeyDown={(e) => e.key === "Enter" && generate()}
           placeholder="e.g. design-sprint, q1-review…"
           className="
@@ -56,7 +56,7 @@ export function GenerateSection({
 
       <button
         onClick={generate}
-        disabled={loading || !name.trim()}
+        disabled={loading || !roomName.trim()}
         className="
           w-full py-2.5 rounded-lg font-mono text-[11px] font-bold
           tracking-widest uppercase
@@ -79,7 +79,7 @@ export function GenerateSection({
               ⬡
             </div>
             <div className="min-w-0">
-              <p className="text-[12px] font-bold font-mono truncate">{result.name}</p>
+              <p className="text-[12px] font-bold font-mono truncate">{result.roomName}</p>
               <p className="text-[9px] text-amber-400/70 font-mono tracking-wide mt-0.5">
                 ID: {result.id}
               </p>

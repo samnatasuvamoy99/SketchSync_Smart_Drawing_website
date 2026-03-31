@@ -3,16 +3,10 @@
 import { useState, useRef, useEffect } from "react";
 import { ChatCardProps, Message} from "@/types/ChatType";
 import { MsgBubble } from "./MsgBubble";
+import { FetchMessages } from "@/service/RoomService";
 
-
-const SEED_MESSAGES: Message[] = [
-  { id: "1", sender: "Maya", text: "Check the left arc flow 🔥", isSelf: false, isAI: false },
-  { id: "2", sender: "You", text: "Looks great! Spacing is much better.", isSelf: true, isAI: false },
-];
 
 const uid = () => Math.random().toString(36).slice(2, 9);
-
-
 
 // ChatCard 
 export function ChatCard({ roomName, roomId, isOpen, onClose}: ChatCardProps) {
@@ -26,6 +20,9 @@ export function ChatCard({ roomName, roomId, isOpen, onClose}: ChatCardProps) {
   /* ── Hide if closed */
   if (!isOpen) return null;
 
+   // this is long process......
+
+   
   // /* Fetch room name */
   // useEffect(() => {
   //   if (!roomId) {
@@ -55,7 +52,7 @@ export function ChatCard({ roomName, roomId, isOpen, onClose}: ChatCardProps) {
     // YOUR MESSAGE
     setMessages((prev) => [
       ...prev,
-      { id: uid(), sender: "You", text: t, isSelf: true, isAI: false },
+      { id: uid(), sender: "You", text: t, isSelf: true},
     ]);
 
     // SIMULATED OTHER USER
@@ -67,7 +64,7 @@ export function ChatCard({ roomName, roomId, isOpen, onClose}: ChatCardProps) {
           sender: "Maya",
           text: "Got it ",
           isSelf: false,
-          isAI: false,
+          
         },
       ]);
     }, 800);

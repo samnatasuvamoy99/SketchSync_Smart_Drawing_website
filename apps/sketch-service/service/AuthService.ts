@@ -28,10 +28,11 @@ export async function signin(data: SigninRequest): Promise<AuthResponse> {
   // return res;
    const result = await res.json();
 
-  // store token  in localStorage
-  if( result.token){
-      localStorage.setItem("token",result.token);
+    if (!res.ok) {
+    throw new Error(result.message || "Signin failed");
   }
+
+  
 
   return result;
 }

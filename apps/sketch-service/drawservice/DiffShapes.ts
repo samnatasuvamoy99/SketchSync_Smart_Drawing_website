@@ -5,19 +5,20 @@ export function Sketch(canvas: HTMLCanvasElement) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
-  let existingShapes: Shape[] = [];
+  let existingShapes: Shape[] = [];  // store multiple shapes;
 
-  // background
+  //  canvas background color.........
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
   let clicked = false;
-  let startX = 0;
-  let startY = 0;
+  let startX = 0;  // x coordinate 
+  let startY = 0;  // y coordinate 
 
   // proper mouse position
   const getMousePos = (e: MouseEvent) => {
-    const rect = canvas.getBoundingClientRect();
+    const rect = canvas.getBoundingClientRect();  // catchup  which position user mouse clicked...
+
 
     return {
       x: (e.clientX - rect.left),
@@ -28,7 +29,8 @@ export function Sketch(canvas: HTMLCanvasElement) {
   const handleMouseDown = (e: MouseEvent) => {
     clicked = true;
 
-    const pos = getMousePos(e);
+    const pos = getMousePos(e);  // Catch canvas mouse position....
+
     startX = pos.x;
     startY = pos.y;
   };
@@ -40,7 +42,7 @@ export function Sketch(canvas: HTMLCanvasElement) {
 
     const pos = getMousePos(e);
 
-    const width = pos.x - startX;
+    const width = pos.x - startX;  //  for  calculate  width and height 
     const height = pos.y - startY;
 
     existingShapes.push({
@@ -64,7 +66,7 @@ export function Sketch(canvas: HTMLCanvasElement) {
     requestAnimationFrame(() => {
       clearCanvas(existingShapes, canvas, ctx);
 
-      ctx.strokeStyle = "white";
+      ctx.strokeStyle = "white"; // stroke color.......
       ctx.lineWidth = 2;
 
       ctx.strokeRect(startX, startY, width, height);

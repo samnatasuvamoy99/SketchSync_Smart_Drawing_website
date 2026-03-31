@@ -67,6 +67,14 @@ export const signinController = async (req: Request, res: Response) => {
         message: "invalid login details !!"
       })
     }
+       
+    // check .env JWT_PASSWORD exist or not .
+
+     if (!process.env.JWT_PASSWORD) {
+      return res.status(500).json({
+        message: "Server configuration error",
+      });
+    }
 
      //  Generate JWT token
       const token = jwt.sign(
@@ -80,9 +88,9 @@ export const signinController = async (req: Request, res: Response) => {
       res.cookie("token", token, {
         httpOnly: true,
         secure: false,
-        sameSite: "strict",
+        sameSite: "lax",
         // domain: ".example.com",
-        maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+        maxAge: 4 * 24 * 60 * 60 * 1000 // 7 days
       });
 
 
@@ -97,3 +105,9 @@ export const signinController = async (req: Request, res: Response) => {
 
 }
 
+// to get current user id if he was login
+export const currentUser = async(req:Request , res:Response)=>{
+    return res.json({
+    id: req.user_Id,
+  });
+}
