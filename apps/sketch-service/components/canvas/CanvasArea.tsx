@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef } from "react";
-import { Sketch } from "@/drawservice/DiffShapes";
+import { initSketch } from "@/drawservice/DiffShapes";
 
 export default function DrawingCanvas() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -34,7 +34,7 @@ export default function DrawingCanvas() {
     };
 
     setupCanvas();
-    Sketch(canvas);  //for diff types of shapes  
+    initSketch(canvas);  //for diff types of shapes  
 
     const handleResize = () => {
       setupCanvas();

@@ -5,7 +5,10 @@ import {connectDB} from "@repo/db/client"
 import cors from "cors"
 import userRouter from "./routes/auth.routes.js";
 import roomRouter from "./routes/chatroom.routes.js";
+import fetchDetails from "./routes/getdetails.routes.js";
 import cookieParser from "cookie-parser";
+
+
 const app = express();
 const port = 4000;
 // app.use(cors());
@@ -22,6 +25,8 @@ app.use(cookieParser());
 
 app.use("/api/v1/user/auth",userRouter);
 app.use("/message/v2/admin/chat",roomRouter);
+app.use("/fetchRomId/v3",fetchDetails);
+
 
 
 async function startServer(){

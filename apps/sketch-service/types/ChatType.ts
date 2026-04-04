@@ -1,9 +1,10 @@
  export interface Message {
-  id:string;
+  messages: any;
+  id:number;
   sender: string;
   text: string;
   isSelf: boolean;
- 
+  createdAt?: string
 }
 
 export interface ChatCardProps {

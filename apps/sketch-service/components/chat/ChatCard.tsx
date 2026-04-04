@@ -12,7 +12,7 @@ const uid = () => Math.random().toString(36).slice(2, 9);
 export function ChatCard({ roomName, roomId, isOpen, onClose}: ChatCardProps) {
 
 
-  const [messages, setMessages] = useState<Message[]>(SEED_MESSAGES);
+  const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
   const [resolvedName, setResolvedName] = useState(roomName);
   const bottomRef = useRef<HTMLDivElement>(null);

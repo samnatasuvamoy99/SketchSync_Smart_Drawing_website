@@ -1,3 +1,4 @@
+import { Message } from './ChatType';
 export interface CreateRoomResponse {
   id: string;         // e.g. "ROOM-X4K2-9PQR"
   roomName: string;       // e.g. "design-sprint"
@@ -24,18 +25,3 @@ export interface RoomCardProps {
   onClose?: () => void;
 }
 
-
-// for chatroom message
-
-export interface BackendMessage{
-     id:string,
-     message:string,
-     userId:string,
-     roomId:string,
-     createdAt:string
-
-}
-export interface FetchMessageResponse {
-  success: boolean;
-  messages: BackendMessage[];
-}

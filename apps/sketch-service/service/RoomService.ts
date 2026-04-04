@@ -1,8 +1,8 @@
 
-import { CreateRoomResponse, JoinRoomResponse, FetchMessageResponse, BackendMessage } from '../types/RoomType';
+import { CreateRoomResponse, JoinRoomResponse} from '../types/RoomType';
 import { BACKEND_URL, FRONTEND_URL } from '../config';
-import { Message } from '../types/ChatType';
-import { getCurrentUser } from "./getCurrentUser"
+import { getCurrentUser } from "./getCurrentDetails"
+import { Message } from '@/types/ChatType';
 
 
 
@@ -74,9 +74,9 @@ export async function apiJoinRoom(
 
 
 /** Simulated API: fetch messages for a room */
-export async function FetchMessages(data: BackendMessage): Promise<Message[]> {
+export async function FetchMessages(roomId: string): Promise<Message[]> {
   const res = await fetch(
-    `${BACKEND_URL}/message/v2/admin/chat/chats/${data.roomId}`,
+    `${BACKEND_URL}/message/v2/admin/chat/chats/${roomId}`,
     {
       method: "GET",
       credentials: "include", // if using auth cookies
@@ -87,16 +87,16 @@ export async function FetchMessages(data: BackendMessage): Promise<Message[]> {
     throw new Error("Failed to fetch messages");
   }
 
-  const result: FetchMessageResponse = await res.json();
+  const result: Message = await res.json();
 
   const currentUserId = await getCurrentUser(); // get the current userId;
 
-
-  return result.messages.map((msg) => ({
-    id: msg.id,
+ return result.messages.map((msg: any) => ({
+    id: String(msg.id),
     sender: msg.userId,
     text: msg.message,
-    isSelf: msg.userId === currentUserId,  // if msg.userId === currentUserId( get this  through the login details in browsers); that;s mean 
-    createdAt: msg.createdAt, // optional
+    isSelf: msg.userId === currentUserId,
+    createdAt: msg.createdAt,
   }));
+
 }

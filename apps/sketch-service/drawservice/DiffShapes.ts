@@ -1,7 +1,7 @@
 import { Shape } from "@/types/DrawingShapesTypes";
 
 
-export function Sketch(canvas: HTMLCanvasElement) {
+export function initSketch(canvas: HTMLCanvasElement) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
