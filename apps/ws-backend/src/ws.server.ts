@@ -68,6 +68,10 @@ wss.on("connection", (ws, request) => {
         case "chat":
           roomManager.sendMessage(parseData.roomId, parseData.message, userId);
           break;
+
+        case "realtime_drawing":
+         roomManager.sendCoordinate(parseData.roomId , parseData.coordinate);
+         break;  
       }
 
     } catch (err) {

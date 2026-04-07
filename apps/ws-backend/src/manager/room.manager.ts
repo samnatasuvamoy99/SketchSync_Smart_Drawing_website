@@ -28,6 +28,8 @@ class RoomManager {
   ws.send(JSON.stringify({ type: "joined", roomId }));
 }
 
+
+
   //leaveRoom_logic....
   leaveRoom(ws: WebSocket, roomId: string) {
   const user = userManager.getUser(ws);
@@ -42,6 +44,7 @@ class RoomManager {
 
   console.log(`User ${user.userId} left room ${roomId}`);
 }
+
 
 
   // store message in db 
@@ -94,6 +97,62 @@ async sendMessage(roomId: string, message: string, userId: string) {
     console.error("SendMessage Error:", err);
   }
 }
+
+
+
+//realtime share coordinate for drawing
+ 
+// saver coordinate in database
+async saveCoordinate(roomId: string,  coordinate: string) {
+
+  const room = await prisma.room.findUnique({
+    where: { id: roomId }
+  });
+
+  if (!room) {
+    throw new Error(`Room ${roomId} does not exist`);
+  }
+
+  await prisma.snapshot.create({
+    data: {
+      roomId: roomId,
+      coordinates:coordinate
+     
+    }
+  });
+
+  console.log("database pushed the coordinates");
+}
+
+
+//broadcast the   coordinates
+async sendShapes(roomId: string, coordinate: string) {
+  try {
+    console.log("Sending message to room:", roomId);
+
+    await this.saveCoordinate(roomId, coordinate); // before send the shapes store it in database
+
+    userManager.getUsers().forEach(user => {
+      console.log("Checking user rooms:", user.rooms);
+
+      if (user.rooms.includes(roomId)) {
+        console.log("Sending to:", user.userId);
+
+        user.ws.send(
+          JSON.stringify({
+            type: "chat",
+            roomId,
+            coordinate
+          })
+        );
+      }
+    });
+
+  } catch (err) {
+    console.error("SendMessage Error:", err);
+  }
+}
+
 }
 export const roomManager = new RoomManager();
 

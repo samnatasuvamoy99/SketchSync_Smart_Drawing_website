@@ -19,7 +19,7 @@ import { FetchCoordinate } from "../service/coordinate.service.js";
     const Coordinate = await FetchCoordinate(parsed.data);
     console.log("hiii");
     return res.status(200).json({
-      success: true,
+         success: true,
        Coordinate,
     });
 
