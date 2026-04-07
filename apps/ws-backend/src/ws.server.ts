@@ -1,31 +1,18 @@
 import dotenv from "dotenv";
 dotenv.config();
 import { WebSocketServer } from "ws";
-import jwt from "jsonwebtoken";
+
 import { userManager } from "./manager/user.manager";
 import { roomManager } from "./manager/room.manager";
+//import cookie from "cookie";
+import { checkUser } from "./validation/checkuser";
 
 
 const wss = new WebSocketServer({ port: 8080 });
 
 console.log("DB URL:", process.env.DATABASE_URL);
 
-function checkUser(token: string): string | null {
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_PASSWORD!);
 
-    console.log(decoded);
-
-    if (typeof decoded === "string") return null;
-
-    const payload = decoded as { id: string };
-    return payload.id ?? null;
-
-  } catch (err) {
-    console.log("JWT ERROR:", err);
-    return null;
-  }
-}
 
 wss.on("connection", (ws, request) => {
   console.log("NEW CONNECTION");
@@ -35,7 +22,20 @@ wss.on("connection", (ws, request) => {
   });
 
   const fullUrl = new URL(request.url!, "http://localhost:8080");
+     
+  console.log(fullUrl);
+  
   const token = fullUrl.searchParams.get("token") || "";
+
+  //   const cookies = cookie.parse(request.headers.cookie || "");
+  // const token = cookies.token;
+
+  console.log("Token:", token); //  debug
+
+  if (!token) {
+    ws.close();
+    return;
+  }
 
   const userId = checkUser(token);
   // const userId = "test_user";

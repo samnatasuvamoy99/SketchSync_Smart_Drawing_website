@@ -1,4 +1,7 @@
-export type Shape =
+import { Type } from "lucide-react";
+
+
+export type Shape=
   | {
       type: "rectangle";
       x: number;
@@ -18,3 +21,13 @@ export type Shape =
       y: number;
       size: number;
     };
+
+
+
+
+export type CanvasProps = {
+  roomId?: string;
+  canvasRef?: React.RefObject<HTMLCanvasElement | null>;
+  Socket?: WebSocket;
+  token?:string
+};

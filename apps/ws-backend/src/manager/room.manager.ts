@@ -6,6 +6,9 @@ class RoomManager {
 
   //joinRoom logic...
   async joinRoom(ws: WebSocket, roomId: string) {
+
+    console.log("ooooo nooo",roomId);
+
   const user = userManager.getUser(ws);
   if (!user) return;
 
@@ -68,7 +71,7 @@ async sendMessage(roomId: string, message: string, userId: string) {
   try {
     console.log("Sending message to room:", roomId);
 
-    await this.saveMessage(roomId, message, userId);
+    await this.saveMessage(roomId, message, userId); // before send the msg store it in database
 
     userManager.getUsers().forEach(user => {
       console.log("Checking user rooms:", user.rooms);

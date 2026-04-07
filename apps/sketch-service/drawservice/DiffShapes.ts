@@ -1,13 +1,40 @@
+import { getExistingShapes } from "@/service/ShapeService";
 import { Shape } from "@/types/DrawingShapesTypes";
+import { clearCanvas } from "./ClearCanvas";
 
 
-export function initSketch(canvas: HTMLCanvasElement) {
+
+export async function initSketch(canvas: HTMLCanvasElement, roomId?: string, Socket?: WebSocket) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
+
+  // this is the endpoints for check only 
   let existingShapes: Shape[] = [];  // store multiple shapes;
 
-  //  canvas background color.........
+  if (roomId) {
+    existingShapes = await getExistingShapes(roomId);
+  }
+
+
+  //Check the type then store it...
+  if (Socket) {
+    Socket.onmessage = (event) => {
+      const AllShapes = JSON.parse(event.data);
+
+      if (AllShapes.type == "chat") {
+        const parsedShape = JSON.parse(AllShapes.shape)
+        existingShapes.push(parsedShape)
+
+        clearCanvas(existingShapes, canvas, ctx);
+      }
+    }
+  }
+
+
+
+
+  //canvas background color.........
   ctx.fillStyle = "black";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -44,14 +71,24 @@ export function initSketch(canvas: HTMLCanvasElement) {
 
     const width = pos.x - startX;  //  for  calculate  width and height 
     const height = pos.y - startY;
-
-    existingShapes.push({
+      
+     const shape :Shape ={
       type: "rectangle",
       x: startX,
       y: startY,
       width,
       height,
-    });
+     }
+    existingShapes.push(shape);
+     
+    //broadcast the shapes 
+    Socket?.send(JSON.stringify({
+          type:"chat",
+          message:JSON.stringify({
+              shape
+          }),
+          roomId:roomId
+    }))
   };
 
   const handleMouseMove = (e: MouseEvent) => {
@@ -77,7 +114,7 @@ export function initSketch(canvas: HTMLCanvasElement) {
   canvas.addEventListener("mouseup", handleMouseUp);
   canvas.addEventListener("mousemove", handleMouseMove);
 
- 
+
   return () => {
     canvas.removeEventListener("mousedown", handleMouseDown);
     canvas.removeEventListener("mouseup", handleMouseUp);
@@ -85,20 +122,4 @@ export function initSketch(canvas: HTMLCanvasElement) {
   };
 }
 
-function clearCanvas(
-  existingShapes: Shape[],
-  canvas: HTMLCanvasElement,
-  ctx: CanvasRenderingContext2D
-) {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-  existingShapes.forEach((shape) => {
-    if (shape.type === "rectangle") {
-      ctx.strokeStyle = "white";
-      ctx.strokeRect(shape.x, shape.y, shape.width, shape.height);
-    }
-  });
-}

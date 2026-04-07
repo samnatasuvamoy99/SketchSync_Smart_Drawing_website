@@ -1,13 +1,22 @@
-"use client";
-import { useEffect, useRef } from "react";
-import { initSketch } from "@/drawservice/DiffShapes";
 
-export default function DrawingCanvas() {
-  const canvasRef = useRef<HTMLCanvasElement>(null);
+"use client"
+import { useEffect,useRef } from 'react';
+import { CanvasProps } from '../../types/DrawingShapesTypes';
+import { initSketch } from '@/drawservice/DiffShapes';
+
+
+
+
+export function CanvasDrawing( {roomId,Socket,canvasRef}:CanvasProps){
+
   const initialized = useRef(false);
-
   useEffect(() => {
+
     if (initialized.current) return;
+
+
+     if (!canvasRef?.current) return;
+
 
     const canvas = canvasRef.current; // ref the current shapes from canvas
 
@@ -34,7 +43,7 @@ export default function DrawingCanvas() {
     };
 
     setupCanvas();
-    initSketch(canvas);  //for diff types of shapes  
+    initSketch(canvas,roomId ,Socket );  //for diff types of shapes  
 
     const handleResize = () => {
       setupCanvas();
@@ -47,7 +56,7 @@ export default function DrawingCanvas() {
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [canvasRef]);
 
   return (
     <canvas

@@ -1,13 +1,14 @@
-
 "use client";
 import { useState } from "react";
 import { SketchNavbar } from "@/components/layout/Navbar";
 import { SketchSidebar } from "@/components/layout/Sidebar";
 import { List } from "lucide-react";
-import DrawingCanvas from "../../../../components/canvas/CanvasArea"; //
+import DrawingCanvas from "../../../../components/canvas/CanvasSocket"; 
+import { CanvasProps } from "@/types/DrawingShapesTypes";
 
 
-export  function Canvas() {
+
+export  function Canvas({roomId , token}:CanvasProps) {
   const [showPage, setShowPage] = useState(false);
 
   return (
@@ -29,7 +30,7 @@ export  function Canvas() {
         onClose={() => setShowPage(false)}
       />
 
-      <DrawingCanvas />
+      <DrawingCanvas token={token} roomId={roomId} />
     </div>
   );
 }

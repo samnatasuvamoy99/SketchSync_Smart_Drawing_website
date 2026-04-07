@@ -43,7 +43,7 @@ export const createRoomController = async (
 
     // Fetch messages
     const messages = await ChatsRoomMessage(parsed.data);
-
+    console.log("hiii");
     return res.status(200).json({
       success: true,
       messages,
