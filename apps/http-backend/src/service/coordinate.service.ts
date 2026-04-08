@@ -10,7 +10,7 @@ export const FetchCoordinate = async (body: any) => {
     throw new Error("RoomId not Found");
   }
 
-  const Coordinate= await prisma.snapshot.findFirst({
+  const Coordinate= await prisma.snapshot.findMany({
     where: {
        roomId:parsed.data
       },
@@ -20,5 +20,5 @@ export const FetchCoordinate = async (body: any) => {
     take:50
   });
 
-   return Coordinate?.coordinates;
+   return Coordinate;
 };

@@ -2,110 +2,114 @@ import { getExistingShapes } from "@/service/ShapeService";
 import { Shape } from "@/types/DrawingShapesTypes";
 import { clearCanvas } from "./ClearCanvas";
 
-
-
-export async function initSketch(canvas: HTMLCanvasElement, roomId?: string, Socket?: WebSocket) {
+export async function initSketch(
+  canvas: HTMLCanvasElement,
+  roomId?: string,
+  Socket?: WebSocket
+) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
+  // DPR setup (ONLY for sharpness)
+  const dpr = window.devicePixelRatio || 1;
+  canvas.width = canvas.clientWidth * dpr;
+  canvas.height = canvas.clientHeight * dpr;
+  ctx.scale(dpr, dpr);
 
-  // this is the endpoints for check only 
-  let existingShapes: Shape[] = [];  // store multiple shapes;
+  let existingShapes: Shape[] = [];
 
+  // Load previous shapes
   if (roomId) {
     existingShapes = await getExistingShapes(roomId);
+    clearCanvas(existingShapes, canvas, ctx);
   }
 
-
-  //Check the type then store it...
+  // WebSocket
   if (Socket) {
     Socket.onmessage = (event) => {
-      const AllShapes = JSON.parse(event.data);
+      const data = JSON.parse(event.data);
 
-      if (AllShapes.type == "chat") {
-        const parsedShape = JSON.parse(AllShapes.shape)
-        existingShapes.push(parsedShape)
+      if (data.type === "realtime_drawing") {
+        try {
+          const parsed = JSON.parse(data.coordinate);
+          const shape = parsed?.shape;
 
-        clearCanvas(existingShapes, canvas, ctx);
+          if (shape) {
+            existingShapes.push(shape);
+            clearCanvas(existingShapes, canvas, ctx);
+          }
+        } catch (err) {
+          console.error("WS error:", err);
+        }
       }
-    }
+    };
   }
 
-
-
-
-  //canvas background color.........
-  ctx.fillStyle = "black";
-  ctx.fillRect(0, 0, canvas.width, canvas.height);
-
   let clicked = false;
-  let startX = 0;  // x coordinate 
-  let startY = 0;  // y coordinate 
+  let startX = 0;
+  let startY = 0;
 
-  // proper mouse position
+  // PURE CSS coordinates (NO scaling here)
   const getMousePos = (e: MouseEvent) => {
-    const rect = canvas.getBoundingClientRect();  // catchup  which position user mouse clicked...
-
-
+    const rect = canvas.getBoundingClientRect();
     return {
-      x: (e.clientX - rect.left),
-      y: (e.clientY - rect.top),
+      x: e.clientX - rect.left,
+      y: e.clientY - rect.top,
     };
   };
 
   const handleMouseDown = (e: MouseEvent) => {
     clicked = true;
-
-    const pos = getMousePos(e);  // Catch canvas mouse position....
-
+    const pos = getMousePos(e);
     startX = pos.x;
     startY = pos.y;
   };
 
   const handleMouseUp = (e: MouseEvent) => {
     if (!clicked) return;
-
     clicked = false;
-
-    const pos = getMousePos(e);
-
-    const width = pos.x - startX;  //  for  calculate  width and height 
-    const height = pos.y - startY;
-      
-     const shape :Shape ={
-      type: "rectangle",
-      x: startX,
-      y: startY,
-      width,
-      height,
-     }
-    existingShapes.push(shape);
-     
-    //broadcast the shapes 
-    Socket?.send(JSON.stringify({
-          type:"chat",
-          message:JSON.stringify({
-              shape
-          }),
-          roomId:roomId
-    }))
-  };
-
-  const handleMouseMove = (e: MouseEvent) => {
-    if (!clicked) return;
 
     const pos = getMousePos(e);
 
     const width = pos.x - startX;
     const height = pos.y - startY;
 
+    //  NORMALIZED using CSS size
+    const shape: Shape = {
+      type: "rectangle",
+      x: startX / canvas.clientWidth,
+      y: startY / canvas.clientHeight,
+      width: width / canvas.clientWidth,
+      height: height / canvas.clientHeight,
+    };
+
+    existingShapes.push(shape);
+    clearCanvas(existingShapes, canvas, ctx);
+
+    // Send to server
+    Socket?.send(
+      JSON.stringify({
+        type: "realtime_drawing",
+        coordinate: JSON.stringify({ shape }),
+        roomId,
+      })
+    );
+  };
+
+  const handleMouseMove = (e: MouseEvent) => {
+    if (!clicked) return;
+
+    const pos = getMousePos(e);
+    const width = pos.x - startX;
+    const height = pos.y - startY;
 
     requestAnimationFrame(() => {
       clearCanvas(existingShapes, canvas, ctx);
 
-      ctx.strokeStyle = "white"; // stroke color.......
+      ctx.strokeStyle = "white";
       ctx.lineWidth = 2;
 
+      
       ctx.strokeRect(startX, startY, width, height);
     });
   };
@@ -114,12 +118,9 @@ export async function initSketch(canvas: HTMLCanvasElement, roomId?: string, Soc
   canvas.addEventListener("mouseup", handleMouseUp);
   canvas.addEventListener("mousemove", handleMouseMove);
 
-
   return () => {
     canvas.removeEventListener("mousedown", handleMouseDown);
     canvas.removeEventListener("mouseup", handleMouseUp);
     canvas.removeEventListener("mousemove", handleMouseMove);
   };
 }
-
-

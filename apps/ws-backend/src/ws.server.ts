@@ -70,7 +70,7 @@ wss.on("connection", (ws, request) => {
           break;
 
         case "realtime_drawing":
-         roomManager.sendCoordinate(parseData.roomId , parseData.coordinate);
+         roomManager.sendShapes(parseData.roomId , parseData.coordinate);
          break;  
       }
 

@@ -1,33 +1,44 @@
-
 import { BACKEND_URL } from "@/config";
-import { Shape } from '../types/DrawingShapesTypes';
+import { Shape } from "@/types/DrawingShapesTypes";
 
+// DB response type
+interface Coordinate {
+  id: number;
+  roomId: string;
+  coordinates: string; // ✅ correct field
+}
 
-// why need Promise ,,, after hit the backend what res they can return in my fronted , so we are use promise which types of request they can return define it...
 export async function getExistingShapes(
   roomId: string
 ): Promise<Shape[]> {
-
-  const res = await fetch(`${BACKEND_URL}/message/v2/admin/chat/chats/:${roomId}`,
+  const res = await fetch(
+    `${BACKEND_URL}/drawingShapes/v4/canvas/coordinate/${roomId}`,
     {
       method: "GET",
-      credentials: "include",
     }
   );
 
-  // if (!res.ok) {
-  //   throw new Error("Failed to fetch messages");
-  // }
+  const data = await res.json();
 
-  // const data : ShapeResponse  = await res.json();
+  console.log("API RESPONSE:", data);
 
-  const shapes =  res.formData.messages;
+  const shapes: Shape[] = (data?.Coordinate || [])
+    .map((item: Coordinate) => {
+      try {
+        const parsed = JSON.parse(item.coordinates); // ✅ parse string
 
+        return parsed?.shape || null; // ✅ extract shape safely
+      } catch {
+        return null; // ✅ handle bad JSON
+      }
+    })
+    .filter((shape:any): shape is Shape => {
+      return (
+        shape !== null &&
+        typeof shape === "object" &&
+        "type" in shape
+      );
+    });
 
-  //convert string → object
-  const Allshapes = shapes.map((mes:string) => {
-        const messageData  = JSON.parse(mes.message)
-  });
-
-  return Allshapes;
+  return shapes;
 }

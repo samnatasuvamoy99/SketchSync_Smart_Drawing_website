@@ -103,7 +103,7 @@ async sendMessage(roomId: string, message: string, userId: string) {
 //realtime share coordinate for drawing
  
 // saver coordinate in database
-async saveCoordinate(roomId: string,  coordinate: string) {
+async saveCoordinate(roomId: string,  coordinate:any) {
 
   const room = await prisma.room.findUnique({
     where: { id: roomId }
@@ -140,7 +140,7 @@ async sendShapes(roomId: string, coordinate: string) {
 
         user.ws.send(
           JSON.stringify({
-            type: "chat",
+            type: "realtime_drawing",
             roomId,
             coordinate
           })

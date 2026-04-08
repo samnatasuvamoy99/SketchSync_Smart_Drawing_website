@@ -20,7 +20,7 @@ import { FetchCoordinate } from "../service/coordinate.service.js";
     console.log("hiii");
     return res.status(200).json({
          success: true,
-       Coordinate,
+        Coordinate,
     });
 
   } catch (error: any) {
