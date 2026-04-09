@@ -46,4 +46,5 @@ model Snapshot {
   room      Room   @relation(fields: [roomId], references: [id])
   coordinates      String
   @@index([roomId])
+  createdAt DateTime @default(now())
 }

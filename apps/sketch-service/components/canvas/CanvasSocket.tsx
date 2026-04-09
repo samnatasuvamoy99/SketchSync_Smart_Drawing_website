@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { initSketch } from "@/drawservice/DiffShapes";
 import { CanvasProps } from "@/types/DrawingShapesTypes";
 import { WEBSOCKET_URL } from '../../config';
 import { SpinnerDemo } from "../loading/loading";
@@ -17,10 +16,10 @@ export default  function CanvasSocket({ roomId, token }: CanvasProps) {
     console.log("No token and roomId");
     return;
   }
-  console.log(token);
-  console.log(roomId);
+  // console.log(token);
+  // console.log(roomId);
   
-  console.log(WEBSOCKET_URL);
+  // console.log(WEBSOCKET_URL);
 
   // // connect websocket in canvas
   // if (roomId) {
@@ -34,7 +33,7 @@ export default  function CanvasSocket({ roomId, token }: CanvasProps) {
      
        console.log(ws);
 
-       alert("ws-socket connection successfully completed!!")
+      //  alert("ws-socket connection successfully completed!!")
     Setsocket(ws);
 
       ws.onopen = () => {

@@ -46,30 +46,38 @@ export async function apiCreateRoom(
 
 
 
-/** Simulated API: join room */
-export async function apiJoinRoom(
-  roomId: string,
-
+export function apiJoinRoomWS(
+  ws: WebSocket,
+  roomId: string
 ): Promise<JoinRoomResponse> {
-  // Uncomment below for real API call:
-  // const res = await fetch(`${base}/api/rooms/join`, {
-  //   method: "POST",
-  //   headers: { "Content-Type": "application/json" },
-  //   body: JSON.stringify({ roomId }),
-  // });
-  // if (!res.ok) throw new Error("Room not found");
-  // return res.json();
+  return new Promise((resolve, reject) => {
+    if (!ws || ws.readyState !== WebSocket.OPEN) {
+      return reject(new Error("WebSocket not connected"));
+    }
 
-  // ── MOCK ──
-  await new Promise((r) => setTimeout(r, 700));
-  if (roomId.trim().length < 4) throw new Error("Room not found");
-  return {
-    success: true,
-    roomId,
-    roomName: roomId.startsWith("ROOM-") ? "design-sprint" : roomId,
-    membersOnline: Math.floor(Math.random() * 8) + 1,
-    joinedAt: new Date().toISOString(),
-  };
+    const handler = (event: MessageEvent) => {
+      const data = JSON.parse(event.data);
+
+      if (data.type === "join_success") {
+        ws.removeEventListener("message", handler);
+        resolve(data.payload);
+      }
+
+      if (data.type === "join_error") {
+        ws.removeEventListener("message", handler);
+        reject(new Error(data.message));
+      }
+    };
+
+    ws.addEventListener("message", handler);
+
+    ws.send(
+      JSON.stringify({
+        type: "join_room",
+        roomId,
+      })
+    );
+  });
 }
 
 
