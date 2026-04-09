@@ -88,10 +88,8 @@ export function RoomCard({
               onCreated={(room) => onRoomCreated?.(room)}
             />
           ) : (
-            <JoinSection
-         
-              onJoined={(data) => onRoomJoined?.(data)}
-            />
+           
+             <JoinSection />
           )}
         </div>
 

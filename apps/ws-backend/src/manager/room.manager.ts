@@ -7,29 +7,7 @@ class RoomManager {
   private rooms: Map<string, Set<WebSocket>> = new Map();
 
   //joinRoom logic...
-  //   async joinRoom(ws: WebSocket, roomId: string) {
-
-
-
-  //   const user = userManager.getUser(ws);
-  //   if (!user) return;
-
-  //   const room = await prisma.room.findUnique({
-  //     where: { id: roomId }
-  //   });
-
-  //   if (!room) {
-  //     ws.send(JSON.stringify({ type: "error", message: "Room does not exist" }));
-  //     return;
-  //   }
-
-  //   if (!user.rooms.includes(roomId)) {
-  //     user.rooms.push(roomId);
-  //   }
-
-  //   ws.send(JSON.stringify({ type: "joined", roomId }));
-  // }
-
+  
   async joinRoom(ws: WebSocket, roomId: string) {
     const user = userManager.getUser(ws);
     if (!user) return;
@@ -79,23 +57,6 @@ class RoomManager {
 
     console.log(`User joined room ${roomId} | Users: ${membersOnline}`);
   }
-
-
-  //   //leaveRoom_logic....
-  //   leaveRoom(ws: WebSocket, roomId: string) {
-  //   const user = userManager.getUser(ws);
-  //   if (!user) return;
-
-  //   if (!user.rooms.includes(roomId)) {
-  //     console.log("User not in that room");
-  //     return;
-  //   }
-
-  //   user.rooms = user.rooms.filter(room => room !== roomId);
-
-  //   console.log(`User ${user.userId} left room ${roomId}`);
-  // }
-
 
   leaveRoom(ws: WebSocket, roomId: string) {
     const room = this.rooms.get(roomId);

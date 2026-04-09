@@ -87,8 +87,7 @@ wss.on("connection", (ws, request) => {
     rooms.forEach((roomId) => {
       roomManager.leaveRoom(ws, roomId); //remove from room + cleanup
 
-      alert("")
-    });
+    })
 
     userManager.removeUser(ws); // finally remove user
   });
