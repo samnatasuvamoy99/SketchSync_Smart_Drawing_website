@@ -11,6 +11,7 @@ const uid = () => Math.random().toString(36).slice(2, 9);
 // ChatCard 
 export function ChatCard({ roomName, roomId, isOpen, onClose}: ChatCardProps) {
 
+  if (!isOpen) return null;
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState("");
@@ -42,33 +43,33 @@ export function ChatCard({ roomName, roomId, isOpen, onClose}: ChatCardProps) {
   //   bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   // }, [messages]);
 
-  /* ── SEND MESSAGE (UPDATED) */
-  const send = () => {
-    const t = input.trim();
-    if (!t) return;
+  // /* ── SEND MESSAGE (UPDATED) */
+  // const send = () => {
+  //   const t = input.trim();
+  //   if (!t) return;
 
-    setInput("");
+  //   setInput("");
 
-    // YOUR MESSAGE
-    setMessages((prev) => [
-      ...prev,
-      { id: uid(), sender: "You", text: t, isSelf: true},
-    ]);
+  //   // YOUR MESSAGE
+  //   setMessages((prev) => [
+  //     ...prev,
+  //     { id: uid(), sender: "You", text: t, isSelf: true},
+  //   ]);
 
-    // SIMULATED OTHER USER
-    setTimeout(() => {
-      setMessages((prev) => [
-        ...prev,
-        {
-          id: uid(),
-          sender: "Maya",
-          text: "Got it ",
-          isSelf: false,
+  //   // SIMULATED OTHER USER
+  //   setTimeout(() => {
+  //     setMessages((prev) => [
+  //       ...prev,
+  //       {
+  //         id: uid(),
+  //         sender: "Maya",
+  //         text: "Got it ",
+  //         isSelf: false,
           
-        },
-      ]);
-    }, 800);
-  };
+  //       },
+  //     ]);
+  //   }, 800);
+  // };
 
   return (
     <div className="w-[300px] h-[400px] flex  mt-96 mb-2.5  flex-col bg-[#1C1C1C] border border-white/[0.09] rounded-2xl overflow-hidden shadow-2xl">
@@ -107,12 +108,12 @@ export function ChatCard({ roomName, roomId, isOpen, onClose}: ChatCardProps) {
         <input
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && send()}
+          onKeyDown={(e) => e.key === "Enter" } // && send()
           placeholder="Message room…"
           className="flex-1 bg-white/[0.05] border border-white/[0.08] rounded-lg px-2.5 py-1.5 text-[10px] text-white"
         />
         <button
-          onClick={send}
+          // onClick={send}
           disabled={!input.trim()}
           className="w-[26px] h-[26px] rounded-lg bg-gradient-to-br from-amber-400 to-amber-600 text-black text-[11px] flex items-center justify-center"
         >

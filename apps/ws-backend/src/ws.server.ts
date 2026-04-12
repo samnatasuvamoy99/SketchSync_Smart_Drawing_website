@@ -9,9 +9,6 @@ import { checkUser } from "./validation/checkuser";
 const wss = new WebSocketServer({ port: 8080 });
 
 
-
-
-
 wss.on("connection", (ws, request) => {
   console.log("NEW CONNECTION");
 

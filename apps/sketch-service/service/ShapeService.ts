@@ -5,7 +5,7 @@ import { Shape } from "@/types/DrawingShapesTypes";
 interface Coordinate {
   id: number;
   roomId: string;
-  coordinates: string; // ✅ correct field
+  coordinates: string; //correct field
 }
 
 export async function getExistingShapes(
@@ -25,11 +25,11 @@ export async function getExistingShapes(
   const shapes: Shape[] = (data?.Coordinate || [])
     .map((item: Coordinate) => {
       try {
-        const parsed = JSON.parse(item.coordinates); // ✅ parse string
+        const parsed = JSON.parse(item.coordinates); // parse string
 
-        return parsed?.shape || null; // ✅ extract shape safely
+        return parsed?.shape || null; //extract shape safely
       } catch {
-        return null; // ✅ handle bad JSON
+        return null; // handle bad JSON
       }
     })
     .filter((shape:any): shape is Shape => {

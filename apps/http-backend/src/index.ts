@@ -8,7 +8,6 @@ import roomRouter from "./routes/chatroom.routes.js";
 import fetchDetails from "./routes/getdetails.routes.js";
 import cookieParser from "cookie-parser";
 import coordinate from "./routes/Shapes.route.js"
-
 const app = express();
 const port = 4000;
 // app.use(cors());
@@ -20,7 +19,6 @@ app.use(cors({
 
 app.use(express.json());
 app.use(cookieParser());
-
 
 
 app.use("/api/v1/user/auth",userRouter);

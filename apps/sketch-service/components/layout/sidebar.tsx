@@ -1,11 +1,11 @@
 "use client";
 
 import { useState, ReactNode } from "react";
-import {Layers, Sparkles, Download, History,Hexagon, X, RotateCcw} from "lucide-react";
+import {Layers, Sparkles, Download, History,Hexagon, X, RotateCcw } from "lucide-react";
 import { SidebarProps } from "@/types/Sidebarprops";
 import { PanelButton } from "./SidebarPanelButton";
 import { RoomCard } from "../room/RoomCard";
-
+  
 
 
 /* ─── Types */
@@ -26,7 +26,7 @@ const PANEL_TOOLS: PanelTool[] = [
   { id: "layers",  label: "Layers",    icon: <Layers size={14} /> },
   { id: "ai",      label: "AI Assist", icon: <Sparkles size={14} /> },
   { id: "history", label: "History",   icon: <History size={14} /> },
-  { id: "export",  label: "Export",    icon: <Download size={14} /> },
+  { id: "download",  label: "Download",    icon: <Download size={14} /> },
   { id: "room",    label: "Room",      icon: <Hexagon size={14} /> },
 ];
 
@@ -86,13 +86,13 @@ export function SketchSidebar({
       {/* Backdrop */}
       <div
         onClick={onClose}
-        className="fixed inset-0 bg-black/40 z-[9998]"
+        className="fixed inset-0 bg-black/40 z-40"
       />
 
       {/* Sidebar */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className="fixed mt-14 ml-12 rounded top-0 left-0 h-auto w-56 bg-[#1C1C1C] z-[9999] border-r border-white/[0.09] p-3 flex flex-col gap-3"
+        className="fixed mt-14 ml-12 rounded top-0 left-0 h-auto w-56 bg-[#1C1C1C] z-50 border-r border-white/[0.09] p-3 flex flex-col gap-3"
       >
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -129,15 +129,30 @@ export function SketchSidebar({
           {PANEL_TOOLS.map((t) => (
             <PanelButton key={t.id} tool={t} onClick={() => handleTool(t.id)} />
           ))}
+
+      {tool === "room" && (
+  <div className="fixed inset-0 flex items-center justify-center z-[10000]">
+    <RoomCard
+      isOpen={true}
+      onClose={() => setTool("")}   // close card
+      onRoomCreated={(room) => {
+        console.log("Created:", room);
+      }}
+      onRoomJoined={(data) => {
+        console.log("Joined:", data);
+      }}
+    />
+  </div>
+)}
         </div>
 
         <Divider />
-
+               
       
         
         <button
           onClick={onReset}
-          className="text-white text-sm  justify-center  hover:text-red-700 text-left w-full px-1.5 py-1.5 rounded-lg border border-white/[0.07] bg-transparent hover:bg-white/[0.06] flex items-center transition"
+          className="text-red-700 text-sm  justify-center  hover:text-white text-left w-full px-1.5 py-1.5 rounded-lg border border-white/[0.07] bg-transparent hover:bg-white/[0.06] flex items-center transition"
         >
           Reset 
            <RotateCcw  className=" hover:text-red-600 ml-1 mt-1" size={14}/>

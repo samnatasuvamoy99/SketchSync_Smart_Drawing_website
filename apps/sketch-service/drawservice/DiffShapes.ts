@@ -106,8 +106,8 @@ export async function initSketch(
     requestAnimationFrame(() => {
       clearCanvas(existingShapes, canvas, ctx);
 
-      ctx.strokeStyle = "white";
-      ctx.lineWidth = 2;
+      ctx.strokeStyle = "#f5f5f5";
+      ctx.lineWidth = 1.5;
 
       
       ctx.strokeRect(startX, startY, width, height);

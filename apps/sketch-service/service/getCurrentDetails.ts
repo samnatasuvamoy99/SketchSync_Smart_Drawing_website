@@ -13,13 +13,37 @@ export async function getCurrentUser() {
 
 
 //get roomId through current login user...
-
 export async function getCurrentUserRoomId() {
 
   const res = await fetch(`${BACKEND_URL}/fetchRomId/v3/from/adminId`, {
     credentials: "include",
   })
+   
+  
+    if (!res.ok) {
+    throw new Error("failed fetch adminId");
+  }
 
-   const roomId =  await res.json();
+  const roomId =  await res.json();
   return roomId;
+
 }
+
+
+// get username
+export async function getCurrentUserName() {
+  const res = await fetch(`${BACKEND_URL}/fetchRomId/v3/username`, {
+    credentials: "include",
+  })
+   
+  
+    if (!res.ok) {
+    throw new Error("failed fetch  username");
+  }
+
+  const  username =  await res.json();
+  return username;
+
+}
+
+

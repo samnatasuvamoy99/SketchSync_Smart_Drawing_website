@@ -5,56 +5,20 @@ import { WEBSOCKET_URL } from '../../config';
 import { SpinnerDemo } from "../loading/loading";
 import { CanvasDrawing } from "./CanvasArea";
 import { apiJoinRoomWS } from "@/service/RoomService";
-
+import { Error } from "../ui/error";
 
 // React always passes props as an object, not a raw string
 export default  function CanvasSocket({ roomId, token }: CanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [socket, Setsocket] = useState<WebSocket | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
 
   if (!token || !roomId) {
     console.log("No token and roomId");
     return;
   }
-  // console.log(token);
-  // console.log(roomId);
   
-  // console.log(WEBSOCKET_URL);
-
-  // // connect websocket in canvas
-  // if (roomId) {
-   
-  // }
-
-//  useEffect(() => {
-
-
-//       const ws = new WebSocket(`${WEBSOCKET_URL}?token=${token}`);
-     
-//        console.log(ws);
-
-//       //  alert("ws-socket connection successfully completed!!")
-//     Setsocket(ws);
-
-//       ws.onopen = () => {
-//         Setsocket(ws);
-
-//         ws.send(
-//           JSON.stringify({
-//             type: "join_room",
-//              roomId: roomId,
-//           })
-//         );
-//       };
-
-//       ws.onclose = () => {
-//         console.log("WebSocket closed");
-//       };
-
-
-//     }, [token, roomId])
-
-
 useEffect(() => {
   if (!token || !roomId) return;
 
@@ -66,8 +30,9 @@ useEffect(() => {
       console.log("Joined room:", res);
 
       Setsocket(ws); // set only AFTER success
-    } catch (err) {
+    } catch (err:any) {
       console.error("Join failed:", err);
+      setError(err.message || "Invalid Room ID");
       ws.close();
     }
   };
@@ -81,6 +46,11 @@ useEffect(() => {
   };
 }, [token, roomId]);
 
+if (error) {
+  return (
+     <Error error={error}/>
+  );
+}
 
   if (!socket) {
     return (
@@ -90,6 +60,8 @@ useEffect(() => {
     )
   }
 
+
+  
 
 
   //after socket connection  allow user to drawing something

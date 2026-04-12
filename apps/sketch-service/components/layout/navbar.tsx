@@ -1,27 +1,30 @@
-
+"use client"
 import { useState } from 'react';
 import {Pencil,Square, Circle, Diamond, ArrowRight, Minus, Users, Eraser} from "lucide-react"
 import { ChatCard } from '../chat/ChatCard';
 
 
+type Props = {
+  username?: string;
+};
 
 // import 
-export  function SketchNavbar() {
+export  function SketchNavbar({ username }: Props) {
 
-  const [activeTool, setActiveTool] = useState("pen")
+  const [activeTool, setActiveTool] = useState<string | undefined>(undefined);
   const [strokeStyle, setStrokeStyle] = useState("solid")
    const [showChat, setShowChat] = useState(false);
 
 
 
   const tools = [
-    { id: "pen", icon: <Pencil size={18} /> },
-    { id: "rectangle", icon: <Square size={18} /> },
-    { id: "circle", icon: <Circle size={18} /> },
-    { id: "diamond", icon: <Diamond size={18} /> },
-    { id: "arrow", icon: <ArrowRight size={18} /> },
-    { id: "line", icon: <Minus size={18} /> },
-    { id: "erase", icon: <Eraser size={18} /> }
+    { id: "pen", icon: <Pencil size={13} /> },
+    { id: "rectangle", icon: <Square size={13} /> },
+    { id: "circle", icon: <Circle size={13} /> },
+    { id: "diamond", icon: <Diamond size={13} /> },
+    { id: "arrow", icon: <ArrowRight size={13} /> },
+    { id: "line", icon: <Minus size={13} /> },
+    { id: "erase", icon: <Eraser size={13} /> }
   ]
 
   const strokes = [
@@ -32,11 +35,11 @@ export  function SketchNavbar() {
   ]
 
   return (
-    <div className="fixed top-0 left-0 w-full h-12 bg-[#2b2b2b] border-b border-neutral-700 flex items-center justify-between px-4 z-50">
+    <div className="fixed top-0 left-0 w-full h-12 bg-[#2b2b2b] border-b border-neutral-700 flex items-center justify-between px-4 z-[100]">
 
       <div className="flex gap-2">
         <div className="w-7 h-7 bg-gold-300 rounded-md flex text-xl items-center justify-center font-bold text-white">
-          S
+           S
         </div>
 
         <span className="text-white font-semibold text-sm">
@@ -45,7 +48,7 @@ export  function SketchNavbar() {
       </div>
 
       {/* LEFT SIDE */}
-      <div className="flex items-center gap-3">
+      <div className="flex items-center gap-2">
 
         <span className="text-neutral-400 ml-4 text-sm">
           Shapes
@@ -58,7 +61,7 @@ export  function SketchNavbar() {
             <button
               key={tool.id}
               onClick={() => setActiveTool(tool.id)}
-              className={`w-8 h-8 flex items-center justify-center rounded-lg border border-neutral-600 transition
+              className={`w-7 h-7 flex items-center justify-center rounded-lg border border-neutral-600 transition
               ${activeTool === tool.id
                   ? "bg-black text-white"
                   : "text-white hover:bg-neutral-700"}
@@ -69,7 +72,7 @@ export  function SketchNavbar() {
           ))}
 
            <span className="text-neutral-400 ml-4 text-sm">
-          Shapes
+           Strokes
         </span>
 
           {/* STROKE STYLE */}
@@ -77,7 +80,7 @@ export  function SketchNavbar() {
             <button
               key={stroke.id}
               onClick={() => setStrokeStyle(stroke.id)}
-              className={`w-8 h-8 flex items-center justify-center rounded-lg border border-neutral-600 transition
+              className={`w-7 h-7 flex items-center justify-center rounded-lg border border-neutral-600 transition
               ${strokeStyle === stroke.id
                   ? "bg-black text-white"
                   : "hover:bg-neutral-700"}
@@ -108,18 +111,26 @@ export  function SketchNavbar() {
 
 
 {/* ChatCard render */}
-       
+{/*        
         <ChatCard
         roomId='34gftdnjdd786bbsbdjwj'
         roomName='suvamoy98'
         isOpen={showChat}
         onClose={() => setShowChat(false)}
      />
-     
+      */}
     
+    {showChat && (
+  <ChatCard
+    roomId="34gftdnjdd786bbsbdjwj"
+    roomName="suvamoy98"
+    isOpen={showChat}
+    onClose={() => setShowChat(false)}
+  />
+)}
           
         <div className="w-7 h-7 md:1 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold">
-          A
+          {username?.[0]?.toUpperCase()}
         </div>
 
       </div>

@@ -17,7 +17,7 @@ export function clearCanvas(
     if (!shape) return;
 
     if (shape.type === "rectangle") {
-      ctx.strokeStyle = "white";
+      ctx.strokeStyle = "#f5f5f5";
 
       // convert normalized → CSS pixels
       ctx.strokeRect(

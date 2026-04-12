@@ -1,11 +1,12 @@
 import {prisma} from "@repo/db/client";
 
 
-// delete all coordinate after disconnected meeting
-
+// delete all coordinate after disconnect the meeting
 export async function cleanupSnapshotsByRoom(roomId: string) {
   const TWO_MINUTES = 2 * 60 * 1000;
   const cutoff = new Date(Date.now() - TWO_MINUTES);
+
+console.log("coordinate deleted");
 
   const result = await prisma.snapshot.deleteMany({
     where: {
@@ -14,6 +15,7 @@ export async function cleanupSnapshotsByRoom(roomId: string) {
         lt: cutoff,
       },
     },
+     
   });
 
   console.log(`Old snapshots deleted for room ${roomId}:`, result.count);
