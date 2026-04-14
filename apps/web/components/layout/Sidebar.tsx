@@ -1,8 +1,9 @@
 "use client";
 
-import { useState, ReactNode } from "react";
+import { useState, ReactNode ,useEffect} from "react";
 import {Layers, Sparkles, Download, History,Hexagon, X, RotateCcw } from "lucide-react";
 import { SidebarProps } from "@/types/Sidebarprops";
+import type { StrokeWidth } from "@/types/Sidebarprops";
 import { PanelButton } from "./SidebarPanelButton";
 import { RoomCard } from "../room/RoomCard";
   
@@ -51,7 +52,7 @@ function SectionLabel({ children }: { children: ReactNode }) {
 }
 
 function Divider() {
-  return <div className="h-px bg-white/[0.07] my-0.5" />;
+  return <div className="h-px bg-white/[0.07] my-0.3" />;
 }
 
 
@@ -62,12 +63,21 @@ export function SketchSidebar({
   onClose,
   activeTool = "pen",
   activeColor = "#FFFFFF",
+  activeStrokeWidth = 1.5,
+  onStrokeWidthChange,
   onToolChange,
   onColorChange,
   onReset,
 }: SidebarProps) {
   const [tool, setTool] = useState<string>(activeTool);
   const [color, setColor] = useState<string>(activeColor);
+  const [strokeWidth, setStrokeWidth] = useState<StrokeWidth>(activeStrokeWidth);
+
+   /*Send stroke width to parent */
+  useEffect(() => {
+    onStrokeWidthChange?.(strokeWidth);
+  }, [strokeWidth]);
+
 
   if (!isOpen) return null;
 
@@ -81,6 +91,7 @@ export function SketchSidebar({
     onColorChange?.(hex);
   };
 
+  
   return (
     <>
       {/* Backdrop */}
@@ -92,7 +103,7 @@ export function SketchSidebar({
       {/* Sidebar */}
       <div
         onClick={(e) => e.stopPropagation()}
-        className="fixed mt-14 ml-12 rounded top-0 left-0 h-auto w-56 bg-[#1C1C1C] z-50 border-r border-white/[0.09] p-3 flex flex-col gap-3"
+        className="fixed  mt-14  ml-12 rounded top-0 left-0 h-auto w-56 bg-[#1C1C1C] z-50 border-r border-white/[0.09] p-3 flex flex-col gap-3"
       >
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -122,6 +133,33 @@ export function SketchSidebar({
         </div>
 
         <Divider />
+
+         {/* Stroke Width */}
+        <div>
+          <SectionLabel>Stroke</SectionLabel>
+          <div className="flex gap-1">
+            {[1, 1.5, 2.5, 3].map((w) => (
+              <button
+                key={w}
+                onClick={() => setStrokeWidth(w as StrokeWidth)}
+                className={`w-6 h-6 flex items-center justify-center rounded-md border border-white/10 transition
+                ${
+                  strokeWidth === w
+                    ? "bg-white/10"
+                    : "hover:bg-white/5"
+                }`}
+              >
+                <div
+                  className="w-5 bg-white rounded"
+                  style={{ height: `${w}px` }}
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <Divider />
+
 
         {/* Panels */}
         <div>

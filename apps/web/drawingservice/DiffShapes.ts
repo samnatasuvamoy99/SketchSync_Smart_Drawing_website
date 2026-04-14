@@ -6,17 +6,23 @@ export async function initSketch(
   canvas: HTMLCanvasElement,
   roomId?: string,
   Socket?: WebSocket,
-  tool?:React.MutableRefObject<string>
+  tool?:React.MutableRefObject<string>,
+  color?: React.MutableRefObject<string>,
+  stroke?: React.MutableRefObject<number>
 ) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
 
-  console.log(tool);
+  console.log( "ininketch",tool);
+  console.log("inkidtd" , color);
+  console.log("initkis" , stroke);
+
 
   // DPR setup (ONLY for sharpness)
   const dpr = window.devicePixelRatio || 1;
   canvas.width = canvas.clientWidth * dpr;
   canvas.height = canvas.clientHeight * dpr;
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
   ctx.scale(dpr, dpr);
 
   let existingShapes: Shape[] = [];
@@ -86,10 +92,12 @@ export async function initSketch(
       y: startY / canvas.clientHeight,
       width: width / canvas.clientWidth,
       height: height / canvas.clientHeight,
+      color: color?.current ?? "#f5f5f5",
+      strokeWidth: stroke?.current ?? 1.5,
     };
 
     existingShapes.push(shape);
-    clearCanvas(existingShapes, canvas, ctx);
+    clearCanvas(existingShapes, canvas, ctx );
 
     // Send to server
     Socket?.send(
@@ -101,25 +109,27 @@ export async function initSketch(
     );
   };
 
+  // 
   const handleMouseMove = (e: MouseEvent) => {
-    if (!clicked) return;
+  if (!clicked) return;
 
-    const pos = getMousePos(e);
-    const width = pos.x - startX;
-    const height = pos.y - startY;
+  const pos = getMousePos(e);
+  const width = pos.x - startX;
+  const height = pos.y - startY;
 
-     if (animationFrameId) return;
+  if (animationFrameId) return;
 
-    requestAnimationFrame(() => {
-      clearCanvas(existingShapes, canvas, ctx);
+  animationFrameId = requestAnimationFrame(() => {
+    clearCanvas(existingShapes, canvas, ctx );
 
-      ctx.strokeStyle = "#f5f5f5";
-      ctx.lineWidth = 1.5;
+    ctx.strokeStyle = color?.current ?? "#f5f5f5";
+    ctx.lineWidth = stroke?.current ?? 1.5;
 
-      
-      ctx.strokeRect(startX, startY, width, height);
-    });
-  };
+    ctx.strokeRect(startX, startY, width, height);
+
+    animationFrameId = null;
+  });
+};
 
   canvas.addEventListener("mousedown", handleMouseDown);
   canvas.addEventListener("mouseup", handleMouseUp);

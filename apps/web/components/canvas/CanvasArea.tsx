@@ -4,10 +4,14 @@ import { useEffect, useRef } from "react";
 import { CanvasDrawingProps } from "../../types/DrawingShapesTypes";
 import { initSketch } from "@/drawingservice/DiffShapes";
   
-export function CanvasDrawing({ roomId, Socket, canvasRef,toolRef}:CanvasDrawingProps){
+export function CanvasDrawing({ roomId, Socket, canvasRef,toolRef , colorRef , strokeRef}:CanvasDrawingProps){
 
   console.log( "canvaszzzz",toolRef);
-  
+  console.log("jbjsbs" , colorRef);
+  console.log("dbjbsjbcs" , strokeRef);
+
+
+
   const initialized = useRef(false);
 
   useEffect(() => {
@@ -42,7 +46,7 @@ export function CanvasDrawing({ roomId, Socket, canvasRef,toolRef}:CanvasDrawing
     const ctx = canvas.getContext("2d");
     ctx?.clearRect(0, 0, canvas.width, canvas.height);
 
-    initSketch(canvas, roomId, Socket);  // pass tool id then render drawing
+    initSketch(canvas, roomId, Socket ,toolRef, colorRef, strokeRef);  // pass tool id then render drawing
 
     const handleResize = () => {
       setupCanvas();

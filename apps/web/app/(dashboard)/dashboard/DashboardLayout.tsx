@@ -15,6 +15,8 @@ export default function Layout() {
   const [username, setUsername] = useState<string>("Sketch_Link");
   const [mode, setMode] = useState<"home" | "draw">("home");
   const [selectedTool, setSelectedTool] = useState<string>("pen");
+  const [color, setColor] = useState<string>("#FFFFFF");
+  const [ strokeWidth,setStrokeWidth] = useState<number>(1.5)
 
 
 
@@ -76,6 +78,8 @@ export default function Layout() {
         <SketchSidebar
           isOpen={showPage}
           onClose={() => setShowPage(false)}
+           onColorChange={(color) => setColor(color)}
+           onStrokeWidthChange={(width) => setStrokeWidth(width)}
         />
       )}
 
@@ -107,7 +111,7 @@ export default function Layout() {
       {/* CANVAS */}
       {mode === "draw" && (
         <div className="fixed inset-0 z-10 bg-black">
-          <DrawingCanvas  tool={selectedTool}/>
+          <DrawingCanvas  tool={selectedTool} color={color} strokeWidth={strokeWidth}/>
         </div>
       )}
     </div>
