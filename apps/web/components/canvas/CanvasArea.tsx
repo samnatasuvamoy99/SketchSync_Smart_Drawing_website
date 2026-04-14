@@ -78,7 +78,7 @@
 
 import { useEffect, useRef } from "react";
 import { CanvasProps } from "../../types/DrawingShapesTypes";
-import { initSketch } from "@/drawservice/DiffShapes";
+import { initSketch } from "@/drawingservice/DiffShapes";
 
 export function CanvasDrawing({ roomId, Socket, canvasRef }: CanvasProps) {
   const initialized = useRef(false);

@@ -1,9 +1,5 @@
+import HomePageClient from "../components/home/LandingPageClient";
 
-export default function Home(){
-      return (
-         <h1 className="text-4xl text-red-500 font-bold">
-      Tailwind Working 
-    </h1>
-      )
+export default function HomePage() {
+  return <HomePageClient />;
 }
-
