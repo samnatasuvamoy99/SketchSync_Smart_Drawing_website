@@ -1,20 +1,21 @@
 "use client"
 import { useState } from 'react';
-import {Pencil,Square, Circle, Diamond, ArrowRight, Minus, Users, Eraser, Image , Text} from "lucide-react"
+import { Pencil, Square, Circle, Diamond, ArrowRight, Minus, Users, Eraser, Image, Type } from "lucide-react"
 import { ChatCard } from '../chat/ChatCard';
-
+import { TextFormat } from '@/app/icon/Text';
 
 type Props = {
   username?: string,
- onToolSelect?: () => void;
+  
+  onToolSelect?: (tool: string) => void;
 };
 
 // import 
-export  function SketchNavbar({ username ,onToolSelect }: Props) {
+export function SketchNavbar({ username, onToolSelect }: Props) {
 
   const [activeTool, setActiveTool] = useState<string | undefined>(undefined);
   const [strokeStyle, setStrokeStyle] = useState("solid")
-   const [showChat, setShowChat] = useState(false);
+  const [showChat, setShowChat] = useState(false);
 
 
 
@@ -27,8 +28,8 @@ export  function SketchNavbar({ username ,onToolSelect }: Props) {
     { id: "line", icon: <Minus size={13} /> },
     { id: "erase", icon: <Eraser size={13} /> },
     { id: "insert", icon: <Image size={13} /> },
-    { id: "text", icon: <Text size={13} /> }
- 
+    { id: "text", icon: <TextFormat size={20} className="text-white" /> }
+
   ]
 
   const strokes = [
@@ -41,7 +42,8 @@ export  function SketchNavbar({ username ,onToolSelect }: Props) {
 
   const handleToolClick = (id: string) => {
     setActiveTool(id);
-    onToolSelect?.(); // trigger parent (Layout)
+    
+    onToolSelect?.(id); // trigger parent (Layout and canvas)
   };
 
 
@@ -50,7 +52,7 @@ export  function SketchNavbar({ username ,onToolSelect }: Props) {
 
       <div className="flex gap-2">
         <div className="w-7 h-7 bg-gold-300 rounded-md flex text-xl items-center justify-center font-bold text-white">
-           S
+          S
         </div>
 
         <span className="text-white font-semibold text-sm">
@@ -83,9 +85,9 @@ export  function SketchNavbar({ username ,onToolSelect }: Props) {
             </button>
           ))}
 
-           <span className="text-neutral-400 ml-4 text-sm">
-           Strokes
-        </span>
+          <span className="text-neutral-400 ml-4 text-sm">
+            Strokes
+          </span>
 
           {/* STROKE STYLE */}
           {strokes.map((stroke) => (
@@ -107,9 +109,9 @@ export  function SketchNavbar({ username ,onToolSelect }: Props) {
 
       <div className="flex gap-8">
 
-        <button  
-         onClick={()=> setShowChat( prev => !prev)}
-        className="gap-1 p-1 w-auto h-8 flex items-center justify-center 
+        <button
+          onClick={() => setShowChat(prev => !prev)}
+          className="gap-1 p-1 w-auto h-8 flex items-center justify-center 
         bg-[#2b2b2b] 
         border border-neutral-600 
         
@@ -122,25 +124,15 @@ export  function SketchNavbar({ username ,onToolSelect }: Props) {
         </button>
 
 
-{/* ChatCard render */}
-{/*        
-        <ChatCard
-        roomId='34gftdnjdd786bbsbdjwj'
-        roomName='suvamoy98'
-        isOpen={showChat}
-        onClose={() => setShowChat(false)}
-     />
-      */}
-    
-    {showChat && (
-  <ChatCard
-    roomId="34gftdnjdd786bbsbdjwj"
-    roomName="suvamoy98"
-    isOpen={showChat}
-    onClose={() => setShowChat(false)}
-  />
-)}
-          
+        {showChat && (
+          <ChatCard
+            roomId="34gftdnjdd786bbsbdjwj"
+            roomName="suvamoy98"
+            isOpen={showChat}
+            onClose={() => setShowChat(false)}
+          />
+        )}
+
         <div className="w-7 h-7 md:1 rounded-full bg-blue-500 flex items-center justify-center text-white font-semibold">
           {username?.[0]?.toUpperCase()}
         </div>

@@ -93,14 +93,23 @@ import { CanvasDrawing } from "./CanvasArea";
 import { apiJoinRoomWS } from "@/service/RoomService";
 import { Error } from "../ui/error";
 
-export default function CanvasSocket({ roomId, token }: CanvasProps) {
+export default function CanvasSocket({ roomId, token , tool}: CanvasProps) {
+
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const [socket, setSocket] = useState<WebSocket | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const toolRef = useRef(tool);
+
+
+   // for latest tool pickup
+  useEffect(() => {
+  toolRef.current = tool;
+}, [tool]);
+
 
   // LOCAL MODE (no websocket)
   if (!token || !roomId) {
-    return <CanvasDrawing canvasRef={canvasRef} />;
+    return <CanvasDrawing canvasRef={canvasRef} toolRef={toolRef} />;
   }
 
   useEffect(() => {
@@ -143,6 +152,7 @@ export default function CanvasSocket({ roomId, token }: CanvasProps) {
       roomId={roomId}
       Socket={socket}
       canvasRef={canvasRef}
+      toolRef={toolRef}
     />
   );
 }

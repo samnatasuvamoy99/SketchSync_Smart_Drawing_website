@@ -7,10 +7,16 @@ import { useState, useEffect } from "react";
 import { getCurrentUserName } from "@/service/getCurrentDetails";
 import DrawingCanvas from '@/components/canvas/CanvasSocket';
 
+
+
+//Navbar →Layout(state) → DrawingCanvas → initSketch
 export default function Layout() {
   const [showPage, setShowPage] = useState(true);
-  const [username, setUsername] = useState<string>("");
+  const [username, setUsername] = useState<string>("Sketch_Link");
   const [mode, setMode] = useState<"home" | "draw">("home");
+  const [selectedTool, setSelectedTool] = useState<string>("pen");
+
+
 
   useEffect(() => {
     async function fetchUser() {
@@ -24,6 +30,9 @@ export default function Layout() {
 
     fetchUser();
   }, []);
+
+
+  console.log(selectedTool);
 
   return (
     <div className="h-screen w-screen bg-black relative overflow-hidden">
@@ -45,7 +54,11 @@ export default function Layout() {
       {/* NAVBAR (ALWAYS ON TOP) */}
       <SketchNavbar
         username={username}
-        onToolSelect={() => setMode("draw")}
+        
+        onToolSelect={(tool) =>{
+             setMode("draw");
+            setSelectedTool(tool)
+        } }
       />
 
       {/* LIST BUTTON (FIXED POSITION) */}
@@ -68,7 +81,7 @@ export default function Layout() {
 
       {/* DASHBOARD CONTENT */}
       <div
-        className={`relative z-10 flex flex-col items-center mt-20 transition-all duration-500 ${
+        className={`relative z-10 flex flex-col items-center mt-20 pt-14 transition-all duration-500 ${
           mode === "draw"
             ? "opacity-0 scale-95 pointer-events-none"
             : "opacity-100"
@@ -94,7 +107,7 @@ export default function Layout() {
       {/* CANVAS */}
       {mode === "draw" && (
         <div className="fixed inset-0 z-10 bg-black">
-          <DrawingCanvas />
+          <DrawingCanvas  tool={selectedTool}/>
         </div>
       )}
     </div>

@@ -5,10 +5,13 @@ import { clearCanvas } from "./ClearCanvas";
 export async function initSketch(
   canvas: HTMLCanvasElement,
   roomId?: string,
-  Socket?: WebSocket
+  Socket?: WebSocket,
+  tool?:React.MutableRefObject<string>
 ) {
   const ctx = canvas.getContext("2d");
   if (!ctx) return;
+
+  console.log(tool);
 
   // DPR setup (ONLY for sharpness)
   const dpr = window.devicePixelRatio || 1;

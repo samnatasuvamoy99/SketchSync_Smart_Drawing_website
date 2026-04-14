@@ -25,9 +25,25 @@ export type Shape=
 
 
 
+  export type CanvasRealtimeProps = {
+  roomId?: string;
+  token?:string
+};
+
+
 export type CanvasProps = {
   roomId?: string;
   canvasRef?: React.RefObject<HTMLCanvasElement | null>;
   Socket?: WebSocket;
   token?:string
+  tool: string;
+};
+
+
+export type CanvasDrawingProps = {
+  roomId?: string;
+  canvasRef?: React.RefObject<HTMLCanvasElement | null>;
+  Socket?: WebSocket;
+  token?:string
+  toolRef: React.MutableRefObject<string>;
 };
