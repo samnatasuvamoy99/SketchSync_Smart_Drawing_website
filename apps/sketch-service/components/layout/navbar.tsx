@@ -1,15 +1,16 @@
 "use client"
 import { useState } from 'react';
-import {Pencil,Square, Circle, Diamond, ArrowRight, Minus, Users, Eraser} from "lucide-react"
+import {Pencil,Square, Circle, Diamond, ArrowRight, Minus, Users, Eraser, Image , Text} from "lucide-react"
 import { ChatCard } from '../chat/ChatCard';
 
 
 type Props = {
-  username?: string;
+  username?: string,
+ onToolSelect?: () => void;
 };
 
 // import 
-export  function SketchNavbar({ username }: Props) {
+export  function SketchNavbar({ username ,onToolSelect }: Props) {
 
   const [activeTool, setActiveTool] = useState<string | undefined>(undefined);
   const [strokeStyle, setStrokeStyle] = useState("solid")
@@ -24,7 +25,10 @@ export  function SketchNavbar({ username }: Props) {
     { id: "diamond", icon: <Diamond size={13} /> },
     { id: "arrow", icon: <ArrowRight size={13} /> },
     { id: "line", icon: <Minus size={13} /> },
-    { id: "erase", icon: <Eraser size={13} /> }
+    { id: "erase", icon: <Eraser size={13} /> },
+    { id: "insert", icon: <Image size={13} /> },
+    { id: "text", icon: <Text size={13} /> }
+ 
   ]
 
   const strokes = [
@@ -33,6 +37,13 @@ export  function SketchNavbar({ username }: Props) {
     { id: "dotted", class: "border-t-2 border-dotted border-white w-3" },
     { id: "bold", class: "border-t-4 border-white w-3" }
   ]
+
+
+  const handleToolClick = (id: string) => {
+    setActiveTool(id);
+    onToolSelect?.(); // trigger parent (Layout)
+  };
+
 
   return (
     <div className="fixed top-0 left-0 w-full h-12 bg-[#2b2b2b] border-b border-neutral-700 flex items-center justify-between px-4 z-[100]">
@@ -51,7 +62,7 @@ export  function SketchNavbar({ username }: Props) {
       <div className="flex items-center gap-2">
 
         <span className="text-neutral-400 ml-4 text-sm">
-          Shapes
+          Toolbar
         </span>
 
         {/* SHAPE TOOLS */}
@@ -60,7 +71,8 @@ export  function SketchNavbar({ username }: Props) {
           {tools.map((tool) => (
             <button
               key={tool.id}
-              onClick={() => setActiveTool(tool.id)}
+              onClick={() => handleToolClick(tool.id)}
+
               className={`w-7 h-7 flex items-center justify-center rounded-lg border border-neutral-600 transition
               ${activeTool === tool.id
                   ? "bg-black text-white"

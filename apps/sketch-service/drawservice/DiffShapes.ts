@@ -49,6 +49,8 @@ export async function initSketch(
   let startX = 0;
   let startY = 0;
 
+  let animationFrameId: number | null = null;
+
   // PURE CSS coordinates (NO scaling here)
   const getMousePos = (e: MouseEvent) => {
     const rect = canvas.getBoundingClientRect();
@@ -102,6 +104,8 @@ export async function initSketch(
     const pos = getMousePos(e);
     const width = pos.x - startX;
     const height = pos.y - startY;
+
+     if (animationFrameId) return;
 
     requestAnimationFrame(() => {
       clearCanvas(existingShapes, canvas, ctx);

@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import { Pencil, List } from "lucide-react";
@@ -7,10 +5,12 @@ import { SketchNavbar } from "@/components/layout/Navbar";
 import { SketchSidebar } from "@/components/layout/Sidebar";
 import { useState, useEffect } from "react";
 import { getCurrentUserName } from "@/service/getCurrentDetails";
+import DrawingCanvas from '@/components/canvas/CanvasSocket';
 
 export default function Layout() {
   const [showPage, setShowPage] = useState(true);
   const [username, setUsername] = useState<string>("");
+  const [mode, setMode] = useState<"home" | "draw">("home");
 
   useEffect(() => {
     async function fetchUser() {
@@ -42,13 +42,14 @@ export default function Layout() {
         }}
       />
 
-      {/*NAVBAR (ALWAYS ON TOP) */}
-      
-        <SketchNavbar username={username} />
-      
+      {/* NAVBAR (ALWAYS ON TOP) */}
+      <SketchNavbar
+        username={username}
+        onToolSelect={() => setMode("draw")}
+      />
 
-      {/*LIST BUTTON */}
-      <div className="relative z-50 flex pt-16 pl-4">
+      {/* LIST BUTTON (FIXED POSITION) */}
+      <div className="fixed top-16 left-4 z-50">
         <button
           onClick={() => setShowPage(true)}
           className="text-white hover:text-yellow-400 transition"
@@ -65,8 +66,14 @@ export default function Layout() {
         />
       )}
 
-     
-      <div className="relative z-10 flex flex-col items-center mt-20">
+      {/* DASHBOARD CONTENT */}
+      <div
+        className={`relative z-10 flex flex-col items-center mt-20 transition-all duration-500 ${
+          mode === "draw"
+            ? "opacity-0 scale-95 pointer-events-none"
+            : "opacity-100"
+        }`}
+      >
         <Pencil size={48} className="opacity-50 text-yellow-400" />
 
         <div className="text-white font-semibold font-mono text-2xl mt-4">
@@ -84,6 +91,12 @@ export default function Layout() {
         </div>
       </div>
 
+      {/* CANVAS */}
+      {mode === "draw" && (
+        <div className="fixed inset-0 z-10 bg-black">
+          <DrawingCanvas />
+        </div>
+      )}
     </div>
   );
 }

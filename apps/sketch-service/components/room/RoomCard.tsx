@@ -88,7 +88,7 @@ export function RoomCard({
             <GenerateSection
               onCreated={(room) => onRoomCreated?.(room)}
               onCopiedSuccess={() => {
-                setTimeout(() => setTab("join"), 800); // ✅ switch after copy
+                setTimeout(() => setTab("join"), 800); // switch after copy
               }}
             />
           ) : (
