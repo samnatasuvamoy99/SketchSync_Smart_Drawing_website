@@ -8,6 +8,7 @@ import { SpinnerDemo } from "../loading/loading";
 import { CanvasDrawing } from "./CanvasArea";
 import { apiJoinRoomWS } from "@/service/RoomService";
 import { Error } from "../ui/error";
+import { StrokeStyle } from '../../types/DrawingShapesTypes';
 
 export default function CanvasSocket({
   roomId,
@@ -15,28 +16,41 @@ export default function CanvasSocket({
   tool,
   color,
   strokeWidth,
+  strokeStyle
 }: CanvasProps) {
 
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+
   const [socket, setSocket] = useState<WebSocket | undefined>(undefined);
   const [error, setError] = useState<string | null>(null);
 
   const toolRef = useRef(tool ?? "pen");
   const colorRef = useRef<string>(color ?? "#FFFFFF");
-  const strokeRef = useRef<number>(strokeWidth ?? 1.5);  
+  const strokeRef = useRef<number>(strokeWidth ?? 1.5);
+  const strokeStyleRef = useRef<StrokeStyle>(strokeStyle ?? "solid");
 
-  // keep latest values
+  // keep latest tool
   useEffect(() => {
     toolRef.current = tool ?? "pen";
   }, [tool]);
 
+   // keep latest color
   useEffect(() => {
     colorRef.current = color ?? "#FFFFFF";
   }, [color]);
 
+    // keep latest  strokewidth
   useEffect(() => {
     strokeRef.current = strokeWidth ?? 1.5;
   }, [strokeWidth]);
+
+    // keep latest  strokeStyle
+ useEffect(() => {
+    strokeStyleRef.current = strokeStyle?? "solid";
+  }, [strokeStyle]);
+
+
 
   // WebSocket setup
   useEffect(() => {
@@ -82,7 +96,11 @@ export default function CanvasSocket({
         toolRef={toolRef}
         colorRef={colorRef}
         strokeRef={strokeRef}
+        strokeStyleRef={strokeStyleRef}
+        textAreaRef={textareaRef}
       />
+
+   
     );
   }
 
@@ -95,6 +113,8 @@ export default function CanvasSocket({
       toolRef={toolRef}
       colorRef={colorRef}
       strokeRef={strokeRef}
+      strokeStyleRef={strokeStyleRef}
+      textAreaRef={textareaRef}
     />
   );
 }

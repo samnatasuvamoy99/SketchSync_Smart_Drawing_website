@@ -6,7 +6,7 @@ import { SketchSidebar } from "@/components/layout/Sidebar";
 import { useState, useEffect } from "react";
 import { getCurrentUserName } from "@/service/getCurrentDetails";
 import DrawingCanvas from '@/components/canvas/CanvasSocket';
-
+import { StrokeStyle } from "@/types/DrawingShapesTypes";
 
 
 //Navbar →Layout(state) → DrawingCanvas → initSketch
@@ -14,10 +14,10 @@ export default function Layout() {
   const [showPage, setShowPage] = useState(true);
   const [username, setUsername] = useState<string>("Sketch_Link");
   const [mode, setMode] = useState<"home" | "draw">("home");
-  const [selectedTool, setSelectedTool] = useState<string>("pen");
+  const [selectedTool, setSelectedTool] = useState<string>("pencil");
   const [color, setColor] = useState<string>("#FFFFFF");
   const [ strokeWidth,setStrokeWidth] = useState<number>(1.5)
-
+   const [strokeStyle, setStrokeStyle] = useState<StrokeStyle>("solid");
 
 
   useEffect(() => {
@@ -61,6 +61,8 @@ export default function Layout() {
              setMode("draw");
             setSelectedTool(tool)
         } }
+        onStrokeChange={(style) => setStrokeStyle(style)}
+     
       />
 
       {/* LIST BUTTON (FIXED POSITION) */}
@@ -111,7 +113,7 @@ export default function Layout() {
       {/* CANVAS */}
       {mode === "draw" && (
         <div className="fixed inset-0 z-10 bg-black">
-          <DrawingCanvas  tool={selectedTool} color={color} strokeWidth={strokeWidth}/>
+          <DrawingCanvas  tool={selectedTool} color={color} strokeWidth={strokeWidth} strokeStyle={strokeStyle}/>
         </div>
       )}
     </div>

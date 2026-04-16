@@ -1,9 +1,9 @@
 import { Message } from './ChatType';
 export interface CreateRoomResponse {
-  id: string;         // e.g. "ROOM-X4K2-9PQR"
-  roomName: string;       // e.g. "design-sprint"
-  link: string;       // e.g. "sketching.link/room/room-x4k2-9pqr"
-  createdAt: string;  // ISO timestamp
+  id: string;         
+  roomName: string;      
+  link: string;      
+  createdAt: string; 
   membersOnline:number
 }
 

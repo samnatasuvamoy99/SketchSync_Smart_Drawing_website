@@ -1,12 +1,12 @@
 "use client";
 
-import { useState, ReactNode ,useEffect} from "react";
-import {Layers, Sparkles, Download, History,Hexagon, X, RotateCcw } from "lucide-react";
+import { useState, ReactNode, useEffect } from "react";
+import { Layers, Sparkles, Download, History, Hexagon, X, RotateCcw } from "lucide-react";
 import { SidebarProps } from "@/types/Sidebarprops";
 import type { StrokeWidth } from "@/types/Sidebarprops";
 import { PanelButton } from "./SidebarPanelButton";
 import { RoomCard } from "../room/RoomCard";
-  
+
 
 
 /* ─── Types */
@@ -24,23 +24,25 @@ type ColorType = {
 /* ─── Constant */
 
 const PANEL_TOOLS: PanelTool[] = [
-  { id: "layers",  label: "Layers",    icon: <Layers size={14} /> },
-  { id: "ai",      label: "AI Assist", icon: <Sparkles size={14} /> },
-  { id: "history", label: "History",   icon: <History size={14} /> },
-  { id: "download",  label: "Download",    icon: <Download size={14} /> },
-  { id: "room",    label: "Room",      icon: <Hexagon size={14} /> },
+  { id: "layers", label: "Layers", icon: <Layers size={14} /> },
+  { id: "ai", label: "AI Assist", icon: <Sparkles size={14} /> },
+  { id: "history", label: "History", icon: <History size={14} /> },
+  { id: "download", label: "Download", icon: <Download size={14} /> },
+  { id: "room", label: "Room", icon: <Hexagon size={14} /> },
 ];
+
 
 const COLORS: ColorType[] = [
-  { hex: "#FFFFFF", label: "White" },
-  { hex: "#F59E0B", label: "Amber" },
-  { hex: "#3B82F6", label: "Blue" },
-  { hex: "#22C55E", label: "Green" },
+  { hex: "#F0EDE6", label: "Chalk" },
+  { hex: "#F6C347", label: "Amber" },
+  { hex: "#5B9BD5", label: "Blue" },
+  { hex: "#4CAF7D", label: "Green" },
+  { hex: "#F0874A", label: "Orange" },
+  { hex: "#8B9BB4", label: "Slate" },
   { hex: "#DC2626", label: "Red" },
-  { hex: "#FB923C", label: "Orange" },
-  { hex: "#94A3B8", label: "Slate" },
+  // { hex: "#C084FC", label: "Violet"  },  
+  { hex: "#2DD4BF", label: "Teal" },
 ];
-
 
 
 function SectionLabel({ children }: { children: ReactNode }) {
@@ -73,7 +75,7 @@ export function SketchSidebar({
   const [color, setColor] = useState<string>(activeColor);
   const [strokeWidth, setStrokeWidth] = useState<StrokeWidth>(activeStrokeWidth);
 
-   /*Send stroke width to parent */
+  /*Send stroke width to parent */
   useEffect(() => {
     onStrokeWidthChange?.(strokeWidth);
   }, [strokeWidth]);
@@ -91,7 +93,7 @@ export function SketchSidebar({
     onColorChange?.(hex);
   };
 
-  
+
   return (
     <>
       {/* Backdrop */}
@@ -123,9 +125,8 @@ export function SketchSidebar({
               <button
                 key={c.hex}
                 onClick={() => handleColor(c.hex)}
-                className={`w-5 h-5 rounded-full border ${
-                  color === c.hex ? "border-white border-1 w-6 h-6" : "border-transparent"
-                }`}
+                className={`w-5 h-5 rounded-full border ${color === c.hex ? "border-white border-1 w-6 h-6" : "border-transparent"
+                  }`}
                 style={{ background: c.hex }}
               />
             ))}
@@ -134,20 +135,19 @@ export function SketchSidebar({
 
         <Divider />
 
-         {/* Stroke Width */}
+        {/* Stroke Width */}
         <div>
           <SectionLabel>Stroke</SectionLabel>
           <div className="flex gap-1">
-            {[1, 1.5, 2.5, 3].map((w) => (
+            {[1.5, 2, 2.5, 3.5].map((w) => (
               <button
                 key={w}
                 onClick={() => setStrokeWidth(w as StrokeWidth)}
                 className={`w-6 h-6 flex items-center justify-center rounded-md border border-white/10 transition
-                ${
-                  strokeWidth === w
+                ${strokeWidth === w
                     ? "bg-white/10"
                     : "hover:bg-white/5"
-                }`}
+                  }`}
               >
                 <div
                   className="w-5 bg-white rounded"
@@ -168,32 +168,32 @@ export function SketchSidebar({
             <PanelButton key={t.id} tool={t} onClick={() => handleTool(t.id)} />
           ))}
 
-      {tool === "room" && (
-  <div className="fixed inset-0 flex items-center justify-center z-[10000]">
-    <RoomCard
-      isOpen={true}
-      onClose={() => setTool("")}   // close card
-      onRoomCreated={(room) => {
-        console.log("Created:", room);
-      }}
-      onRoomJoined={(data) => {
-        console.log("Joined:", data);
-      }}
-    />
-  </div>
-)}
+          {tool === "room" && (
+            <div className="fixed inset-0 flex items-center justify-center z-[10000]">
+              <RoomCard
+                isOpen={true}
+                onClose={() => setTool("")}   // close card
+                onRoomCreated={(room) => {
+                  console.log("Created:", room);
+                }}
+                onRoomJoined={(data) => {
+                  console.log("Joined:", data);
+                }}
+              />
+            </div>
+          )}
         </div>
 
         <Divider />
-               
-      
-        
+
+
+
         <button
           onClick={onReset}
           className="text-red-700 text-sm  justify-center  hover:text-white text-left w-full px-1.5 py-1.5 rounded-lg border border-white/[0.07] bg-transparent hover:bg-white/[0.06] flex items-center transition"
         >
-          Reset 
-           <RotateCcw  className=" hover:text-red-600 ml-1 mt-1" size={14}/>
+          Reset
+          <RotateCcw className=" hover:text-red-600 ml-1 mt-1" size={14} />
         </button>
       </div>
     </>

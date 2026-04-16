@@ -4,7 +4,7 @@ import { useEffect, useRef } from "react";
 import { CanvasDrawingProps } from "../../types/DrawingShapesTypes";
 import { initSketch } from "@/drawingservice/DiffShapes";
   
-export function CanvasDrawing({ roomId, Socket, canvasRef,toolRef , colorRef , strokeRef}:CanvasDrawingProps){
+export function CanvasDrawing({ roomId, Socket, canvasRef,toolRef , colorRef , strokeRef , strokeStyleRef , textAreaRef}:CanvasDrawingProps){
 
   console.log( "canvaszzzz",toolRef);
   console.log("jbjsbs" , colorRef);
@@ -46,11 +46,11 @@ export function CanvasDrawing({ roomId, Socket, canvasRef,toolRef , colorRef , s
     const ctx = canvas.getContext("2d");
     ctx?.clearRect(0, 0, canvas.width, canvas.height);
 
-    initSketch(canvas, roomId, Socket ,toolRef, colorRef, strokeRef);  // pass tool id then render drawing
+    initSketch(canvas, roomId, Socket ,toolRef, colorRef, strokeRef , strokeStyleRef , textAreaRef);  // pass tool id then render drawing
 
     const handleResize = () => {
       setupCanvas();
-      initSketch(canvas, roomId, Socket); // redraw shapes
+      initSketch(canvas, roomId, Socket , toolRef, colorRef, strokeRef, strokeStyleRef , textAreaRef); // redraw shapes
     };
 
     window.addEventListener("resize", handleResize);
@@ -64,8 +64,27 @@ export function CanvasDrawing({ roomId, Socket, canvasRef,toolRef , colorRef , s
 
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full relative">
       <canvas ref={canvasRef} className="w-full h-full block" />
+
+       
+    <textarea
+  ref={textAreaRef}
+  style={{
+    position: "absolute",
+    display: "none",
+    background: "transparent",
+    color: "white",
+    border: "1px dashed #888",
+    outline: "none",
+    resize: "none",
+    font: "16px sans-serif",
+    zIndex: 1000,
+    minWidth: "100px",
+    minHeight: "30px",
+    pointerEvents: "auto"
+  }}
+  />
     </div>
   );
 }
