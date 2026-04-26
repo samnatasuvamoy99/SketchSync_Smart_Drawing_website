@@ -4,7 +4,7 @@ import { WebSocketServer } from "ws";
 import { userManager } from "./manager/user.manager";
 import { roomManager } from "./manager/room.manager";
 import { checkUser } from "./validation/checkuser";
-
+import { cleanupSnapshotsByRoom } from "./services/room.service";
 
 const wss = new WebSocketServer({ port: 8080 });
 
@@ -66,6 +66,13 @@ wss.on("connection", (ws, request) => {
         case "realtime_drawing":
           roomManager.sendShapes(parseData.roomId, parseData.coordinate);
           break;
+
+        case "erase":
+          await roomManager.eraseShape(
+            parseData.roomId,
+            parseData.shapeId
+          );
+          break;
       }
 
     } catch (err) {
@@ -76,17 +83,33 @@ wss.on("connection", (ws, request) => {
 
 
 
-  ws.on("close", () => {
+  // ws.on("close", async() => {
+  //   console.log("User disconnected");
+
+  //   const rooms = userManager.getUserRooms(ws);
+
+  //   rooms.forEach((roomId) => {
+  //    await roomManager.leaveRoom(ws, roomId); //remove from room + cleanup
+
+  //   })
+
+  //   userManager.removeUser(ws); // finally remove user
+  // });
+  ws.on("close", async () => {
     console.log("User disconnected");
 
     const rooms = userManager.getUserRooms(ws);
 
-    rooms.forEach((roomId) => {
-      roomManager.leaveRoom(ws, roomId); //remove from room + cleanup
+    try {
+      for (const roomId of rooms) {
+        await roomManager.leaveRoom(ws, roomId);
 
-    })
+      }
+    } catch (err) {
+      console.error("Error during leaveRoom:", err);
+    }
 
-    userManager.removeUser(ws); // finally remove user
+    userManager.removeUser(ws);
   });
 
   ws.send(JSON.stringify({ type: "connected" }));

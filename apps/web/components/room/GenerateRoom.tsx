@@ -35,7 +35,7 @@ export function GenerateSection({
 
         //SWITCH TO JOIN TAB
         onCopiedSuccess?.();
-      }, 200);
+      }, 700);
 
     } catch (err) {
       console.error("Copy failed", err);

@@ -1,90 +1,118 @@
+
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { SketchEngine } from "@/drawingservice/engine/SketchEngine";
 import { CanvasDrawingProps } from "../../types/DrawingShapesTypes";
-import { initSketch } from "@/drawingservice/DiffShapes";
-  
-export function CanvasDrawing({ roomId, Socket, canvasRef,toolRef , colorRef , strokeRef , strokeStyleRef , textAreaRef}:CanvasDrawingProps){
+import { getExistingShapes } from "@/service/ShapeService";
+import { SpinnerDemo } from "../loading/loading";
 
-  console.log( "canvaszzzz",toolRef);
-  console.log("jbjsbs" , colorRef);
-  console.log("dbjbsjbcs" , strokeRef);
+export function CanvasDrawing({
+  canvasRef,
+  textAreaRef,
+  tool,
+  color,
+  strokeWidth,
+  strokeStyle,
+  Socket,
+  roomId
+}: CanvasDrawingProps) {
 
+  const engineRef = useRef<SketchEngine | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [initialShapes, setInitialShapes] = useState<any[]>([]);
 
-
-  const initialized = useRef(false);
-
+  // 1. FETCH SHAPES
   useEffect(() => {
-    if (initialized.current) return;
-    if (!canvasRef?.current) return;
+    const fetchShapes = async () => {
+      try {
+        if (!roomId) {
+          setLoading(false);
+          return;
+        }
 
-    const canvas = canvasRef.current;
-
-    const setupCanvas = () => {
-      const dpr = window.devicePixelRatio || 1;
-      const rect = canvas.getBoundingClientRect();
-
-      canvas.width = rect.width * dpr;
-      canvas.height = rect.height * dpr;
-
-      const ctx = canvas.getContext("2d", { willReadFrequently: true });
-      if (!ctx) return;
-
-      // reset transform before scaling
-      ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.scale(dpr, dpr);
-
-      ctx.lineCap = "round";
-      ctx.lineJoin = "round";
-      ctx.imageSmoothingEnabled = true;
-      ctx.lineWidth = 1;
+        const shapes = await getExistingShapes(roomId);
+        setInitialShapes(shapes);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    setupCanvas();
+    fetchShapes();
+  }, [roomId]);
 
-    //  initial clear (fix first render issue)
-    const ctx = canvas.getContext("2d");
-    ctx?.clearRect(0, 0, canvas.width, canvas.height);
+  // 2. INIT ENGINE
+  useEffect(() => {
+    if (!canvasRef.current || loading) return;
 
-    initSketch(canvas, roomId, Socket ,toolRef, colorRef, strokeRef , strokeStyleRef , textAreaRef);  // pass tool id then render drawing
+    const engine = new SketchEngine(canvasRef.current, {
+      socket: Socket,
+      roomId,
+      textarea: textAreaRef?.current,
+      initialShapes
+    });
 
-    const handleResize = () => {
-      setupCanvas();
-      initSketch(canvas, roomId, Socket , toolRef, colorRef, strokeRef, strokeStyleRef , textAreaRef); // redraw shapes
-    };
+    engineRef.current = engine;
 
-    window.addEventListener("resize", handleResize);
+    return () => engine.destroy();
+  }, [loading, canvasRef, Socket, roomId]);
 
-    initialized.current = true;
+  //  TOOL
+  useEffect(() => {
+    engineRef.current?.setTool(tool ?? "pencil");
+  }, [tool]);
 
-    return () => {
-      window.removeEventListener("resize", handleResize);
-    };
-  }, [canvasRef, roomId, Socket]);
+  //  COLOR
+  useEffect(() => {
+    engineRef.current?.setColor(color ?? "#fff");
+
+    if (textAreaRef?.current) {
+      textAreaRef.current.style.color = color ?? "#fff";
+      textAreaRef.current.style.border = `2px solid ${color}`;
+      textAreaRef.current.style.caretColor = color ?? "#fff";
+    }
+  }, [color]);
+
+  //  STROKE WIDTH
+  useEffect(() => {
+    engineRef.current?.setStroke(strokeWidth ?? 1.5);
+  }, [strokeWidth]);
+
+  //  STROKE STYLE
+  useEffect(() => {
+    engineRef.current?.setStrokeStyle(strokeStyle ?? "solid");
+  }, [strokeStyle]);
 
 
   return (
-    <div className="w-full h-full relative">
-      <canvas ref={canvasRef} className="w-full h-full block" />
+    <div className="relative w-full h-full">
+      {loading ? (
+        <div className="flex items-center justify-center h-full bg-black">
+          <SpinnerDemo />
+        </div>
+      ) : (
+        <>
+          <canvas ref={canvasRef} className="w-full h-full" />
 
-       
-    <textarea
-  ref={textAreaRef}
-  style={{
-    position: "absolute",
-    display: "none",
-    background: "transparent",
-    color: "white",
-    border: "1px dashed #888",
-    outline: "none",
-    resize: "none",
-    font: "16px sans-serif",
-    zIndex: 1000,
-    minWidth: "100px",
-    minHeight: "30px",
-    pointerEvents: "auto"
-  }}
-  />
+          <textarea
+            ref={textAreaRef}
+            className="absolute hidden resize-none overflow-hidden z-[9999]"
+            style={{
+              fontSize: "16px",
+              fontFamily: "sans-serif",
+              lineHeight: "1.2",
+              padding: "4px 8px",
+              minWidth: "150px",
+              minHeight: "30px",
+              backgroundColor: "rgba(0,0,0,0.8)",
+              outline: "none",
+              borderRadius: "4px",
+            }}
+          />
+        </>
+      )}
     </div>
   );
 }

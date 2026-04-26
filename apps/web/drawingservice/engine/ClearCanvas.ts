@@ -1,8 +1,8 @@
 
 import { Shape } from "@/types/DrawingShapesTypes";
-import { drawDiamond } from "./util/Diamand";
-import { drawArrow } from "./util/Drawarrow"
-import { applyStrokeStyle } from "./util/StrokeStyle";
+import { drawDiamond } from "../util/Diamand";
+import { drawArrow } from "../util/Drawarrow"
+import { applyStrokeStyle } from "../util/StrokeStyle";
 
 
 export function clearCanvas(

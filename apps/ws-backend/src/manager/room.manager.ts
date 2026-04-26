@@ -1,22 +1,41 @@
 import { WebSocket } from "ws";
 import { userManager } from "./user.manager";
-import { prisma } from "@repo/db/client"
-import { cleanupSnapshotsByRoom, saveMessage, saveCoordinate } from "../services/room.service";
-class RoomManager {
+import { prisma } from "@repo/db/client";
+import {
+  cleanupSnapshotsByRoom,
+  saveMessage,
+  saveCoordinate,
+} from "../services/room.service";
 
+class RoomManager {
   private rooms: Map<string, Set<WebSocket>> = new Map();
 
-  //joinRoom logic...
   
+  // JOIN ROOM (FIXED)
+ 
   async joinRoom(ws: WebSocket, roomId: string) {
     const user = userManager.getUser(ws);
     if (!user) return;
 
-    //  check room exists in DB
-    const room = await prisma.room.findUnique({
+    
+
+  let room = null;
+
+  const MAX_RETRIES = 5;
+  const DELAY = 300;
+
+  for (let i = 0; i < MAX_RETRIES; i++) {
+    room = await prisma.room.findUnique({
       where: { id: roomId },
     });
 
+    if (room) break;
+
+    await new Promise((r) => setTimeout(r, DELAY));
+  }
+
+
+    //room still not found
     if (!room) {
       ws.send(
         JSON.stringify({
@@ -27,12 +46,13 @@ class RoomManager {
       return;
     }
 
-    // add user → user.rooms
+    
+    // ADD USER TO ROOM (MEMORY)
+    
     if (!user.rooms.includes(roomId)) {
       user.rooms.push(roomId);
     }
 
-    // add user → room map
     if (!this.rooms.has(roomId)) {
       this.rooms.set(roomId, new Set());
     }
@@ -41,7 +61,6 @@ class RoomManager {
 
     const membersOnline = this.rooms.get(roomId)!.size;
 
-    //send response
     ws.send(
       JSON.stringify({
         type: "join_success",
@@ -58,7 +77,9 @@ class RoomManager {
     console.log(`User joined room ${roomId} | Users: ${membersOnline}`);
   }
 
-  leaveRoom(ws: WebSocket, roomId: string) {
+ 
+  // LEAVE ROOM
+  async leaveRoom(ws: WebSocket, roomId: string) {
     const room = this.rooms.get(roomId);
     if (!room) return;
 
@@ -67,75 +88,90 @@ class RoomManager {
     if (room.size === 0) {
       this.rooms.delete(roomId);
 
-      //  DELETE coordinates when empty
-      cleanupSnapshotsByRoom(roomId);
+      try {
+        await cleanupSnapshotsByRoom(roomId);
+        console.log("coordinate deleted");
+      } catch (err) {
+        console.error("cleanup failed:", err);
+      }
     }
   }
 
-
-  // sendMessage logic
+  
+  // CHAT MESSAGES
   async sendMessage(roomId: string, message: string, userId: string) {
     try {
       console.log("Sending message to room:", roomId);
 
-      await saveMessage(roomId, message, userId); // before send the msg store it in database
+      await saveMessage(roomId, message, userId);
 
-      userManager.getUsers().forEach(user => {
-        console.log("Checking user rooms:", user.rooms);
-
+      userManager.getUsers().forEach((user) => {
         if (user.rooms.includes(roomId)) {
-          console.log("Sending to:", user.userId);
-
           user.ws.send(
             JSON.stringify({
               type: "chat",
               roomId,
               message,
-              userId
+              userId,
             })
           );
         }
-
-
       });
-
     } catch (err) {
       console.error("SendMessage Error:", err);
     }
   }
 
-  //broadcast the   coordinates
+ 
+  // REALTIME DRAWING
   async sendShapes(roomId: string, coordinate: string) {
     try {
-      console.log("Sending message to room:", roomId);
+      console.log("Broadcasting drawing to room:", roomId);
 
-
-
-      userManager.getUsers().forEach(user => {
-        console.log("Checking user rooms:", user.rooms);
-
+      userManager.getUsers().forEach((user) => {
         if (user.rooms.includes(roomId)) {
-          console.log("Sending to:", user.userId);
-
           user.ws.send(
             JSON.stringify({
               type: "realtime_drawing",
               roomId,
-              coordinate
+              coordinate,
             })
           );
         }
       });
 
-      // Then store in DB
       await saveCoordinate(roomId, coordinate);
-
-
     } catch (err) {
-      console.error("SendMessage Error:", err);
+      console.error("SendShapes Error:", err);
     }
   }
 
-}
-export const roomManager = new RoomManager();
+  //erase Coordinate
+  async eraseShape(roomId: string, shapeId: string) {
+  try {
+    console.log("Erasing shape:", shapeId);
 
+    //delete from DB
+    await prisma.shape.delete({
+      where: { id: shapeId },
+    });
+
+    //broadcast erase to all users
+    userManager.getUsers().forEach((user) => {
+      if (user.rooms.includes(roomId)) {
+        user.ws.send(
+          JSON.stringify({
+            type: "erase",
+            shapeId,
+          })
+        );
+      }
+    });
+
+  } catch (err) {
+    console.error("Erase Error:", err);
+  }
+}
+}
+
+export const roomManager = new RoomManager();

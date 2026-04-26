@@ -34,7 +34,7 @@ export default function Layout() {
   }, []);
 
 
-  console.log(selectedTool);
+  console.log("tool",selectedTool);
 
   return (
     <div className="h-screen w-screen bg-black relative overflow-hidden">

@@ -2,7 +2,27 @@ import {ChatRoomId} from "../schema/data_validation.schema.js";
 import { prisma } from "@repo/db/client";
 
 
-// Service -> fetch all the drawing coordinate 
+// // Service -> fetch all the drawing coordinate 
+// export const FetchCoordinate = async (body: any) => {
+//   const parsed = ChatRoomId.safeParse(body);
+
+//   if (!parsed.success) {
+//     throw new Error("RoomId not Found");
+//   }
+
+//   const Coordinate= await prisma.shape.findMany({
+//     where: {
+//        roomId:parsed.data
+//       },
+//     orderBy:{
+//         id:"desc"
+//     },
+//     take:50
+//   });
+
+//    return Coordinate;
+// };
+
 export const FetchCoordinate = async (body: any) => {
   const parsed = ChatRoomId.safeParse(body);
 
@@ -10,15 +30,18 @@ export const FetchCoordinate = async (body: any) => {
     throw new Error("RoomId not Found");
   }
 
-  const Coordinate= await prisma.snapshot.findMany({
+  const Coordinate = await prisma.shape.findMany({
     where: {
-       roomId:parsed.data
-      },
-    orderBy:{
-        id:"desc"
+      roomId: parsed.data,
+      createdAt: {
+        gt: new Date(Date.now() - 1000 * 60 * 30) // last 30 mins
+      }
     },
-    take:50
+    orderBy: {
+      createdAt: "asc" 
+    }
+    
   });
 
-   return Coordinate;
+  return Coordinate;
 };

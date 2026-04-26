@@ -1,9 +1,10 @@
-import { Type } from "lucide-react";
-import React, { MutableRefObject } from "react";
+
+import React from "react";
 
 export type StrokeStyle = "solid" | "dashed" | "dotted" | "bold";
 
 type BaseShape = {
+  id: string;
   color: string;
   strokeWidth?: number;
   strokeStyle?: StrokeStyle;
@@ -91,12 +92,14 @@ export type CanvasProps = {
 
 export type CanvasDrawingProps = {
   roomId?: string;
+
   canvasRef: React.RefObject<HTMLCanvasElement | null>;
-  textAreaRef?:React.RefObject<HTMLTextAreaElement| null>;
+  textAreaRef?: React.RefObject<HTMLTextAreaElement | null>;
+
+  tool?: string;
+  color?: string;
+  strokeWidth?: number;
+  strokeStyle?: StrokeStyle;
+
   Socket?: WebSocket;
-  token?:string
-  toolRef: React.MutableRefObject<string>;
-  colorRef :React.MutableRefObject<string>;
-  strokeRef:React.MutableRefObject<number>;
-  strokeStyleRef:React.MutableRefObject<StrokeStyle>
 };

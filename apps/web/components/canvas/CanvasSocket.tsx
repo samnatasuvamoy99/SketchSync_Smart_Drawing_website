@@ -1,4 +1,5 @@
 
+
 "use client";
 
 import { useEffect, useRef, useState } from "react";
@@ -8,7 +9,6 @@ import { SpinnerDemo } from "../loading/loading";
 import { CanvasDrawing } from "./CanvasArea";
 import { apiJoinRoomWS } from "@/service/RoomService";
 import { Error } from "../ui/error";
-import { StrokeStyle } from '../../types/DrawingShapesTypes';
 
 export default function CanvasSocket({
   roomId,
@@ -16,71 +16,74 @@ export default function CanvasSocket({
   tool,
   color,
   strokeWidth,
-  strokeStyle
+  strokeStyle,
 }: CanvasProps) {
 
-  const canvasRef = useRef<HTMLCanvasElement | null>(null);
-  const textareaRef = useRef<HTMLTextAreaElement | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const [socket, setSocket] = useState<WebSocket | undefined>(undefined);
+  // WebSocket stored in ref (NOT state)
+  const socketRef = useRef<WebSocket | null>(null);
+
+  // UI state only
+  const [ready, setReady] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const toolRef = useRef(tool ?? "pen");
-  const colorRef = useRef<string>(color ?? "#FFFFFF");
-  const strokeRef = useRef<number>(strokeWidth ?? 1.5);
-  const strokeStyleRef = useRef<StrokeStyle>(strokeStyle ?? "solid");
+  const connectingRef = useRef(false);
 
-  // keep latest tool
-  useEffect(() => {
-    toolRef.current = tool ?? "pen";
-  }, [tool]);
+  // WebSocket lifecycle
 
-   // keep latest color
-  useEffect(() => {
-    colorRef.current = color ?? "#FFFFFF";
-  }, [color]);
-
-    // keep latest  strokewidth
-  useEffect(() => {
-    strokeRef.current = strokeWidth ?? 1.5;
-  }, [strokeWidth]);
-
-    // keep latest  strokeStyle
- useEffect(() => {
-    strokeStyleRef.current = strokeStyle?? "solid";
-  }, [strokeStyle]);
-
-
-
-  // WebSocket setup
   useEffect(() => {
     if (!token || !roomId) return;
+
+    if (connectingRef.current || socketRef.current) return;
+
+  connectingRef.current = true;
+
 
     const ws = new WebSocket(`${WEBSOCKET_URL}?token=${token}`);
 
     ws.onopen = async () => {
       try {
         await apiJoinRoomWS(ws, roomId);
-        setSocket(ws);
+
+        socketRef.current = ws;
+        setReady(true);
       } catch (err: any) {
-        setError(err.message || "Invalid Room ID");
+        setError(err?.message || "Invalid Room ID");
         ws.close();
       }
+    };
+ 
+    
+    ws.onerror = () => {
+      setError("WebSocket connection failed");
     };
 
     ws.onclose = () => {
       console.log("WebSocket closed");
+      socketRef.current = null;
+      setReady(false);
+      connectingRef.current = false;
     };
 
     return () => {
       ws.close();
+      socketRef.current = null;
     };
   }, [roomId, token]);
 
-  // UI states
-  if (error) return <Error error={error} />;
 
-  if (!socket && token && roomId) {
+  // ERROR UI
+
+  if (error && !ready) {
+    return <Error error={error} />;
+  } 
+
+
+  // LOADING STATE (collab mode)
+
+  if (token && roomId && !ready) {
     return (
       <div className="fixed inset-0 flex items-center justify-center bg-black z-50">
         <SpinnerDemo />
@@ -88,33 +91,35 @@ export default function CanvasSocket({
     );
   }
 
-  // LOCAL MODE (no websocket)
-  if (!token || !roomId) {
-    return (
-      <CanvasDrawing
-        canvasRef={canvasRef}
-        toolRef={toolRef}
-        colorRef={colorRef}
-        strokeRef={strokeRef}
-        strokeStyleRef={strokeStyleRef}
-        textAreaRef={textareaRef}
-      />
 
-   
-    );
+  
+
+  // Shared props
+
+  const commonProps = {
+    canvasRef,
+    textAreaRef: textareaRef,
+    tool,
+    color,
+    strokeWidth,
+    strokeStyle,
+  };
+
+
+  // LOCAL MODE
+
+  if (!token || !roomId) {
+    return <CanvasDrawing {...commonProps} />;
   }
 
+
   // COLLAB MODE
+
   return (
     <CanvasDrawing
+      {...commonProps}
+      Socket={socketRef.current ?? undefined}
       roomId={roomId}
-      Socket={socket}
-      canvasRef={canvasRef}
-      toolRef={toolRef}
-      colorRef={colorRef}
-      strokeRef={strokeRef}
-      strokeStyleRef={strokeStyleRef}
-      textAreaRef={textareaRef}
     />
   );
 }

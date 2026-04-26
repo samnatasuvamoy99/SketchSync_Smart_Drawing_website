@@ -17,34 +17,36 @@ model User {
 }
 
 model Room {
-  id         String     @id @default(uuid())
-  createAt   DateTime   @default(now())
-  slug       String?    @unique
-  adminId    String
-  admin      User       @relation("AdminRooms", fields: [adminId], references: [id])
-  chats      Chat[]
-  Coordinate Snapshot[]
+  id             String     @id @default(uuid())
+  createAt       DateTime   @default(now())
+  slug           String?    @unique
+  adminId        String
+  admin          User       @relation("AdminRooms", fields: [adminId], references: [id])
+  chats          Chat[]
+  Coordinate     Shape[]
 }
 
 model Chat {
-  id        Int      @id @default(autoincrement())
-  message   String
-  userId    String
-  user      User     @relation(fields: [userId], references: [id])
-  roomId    String
-  room      Room     @relation(fields: [roomId], references: [id])
-  createdAt DateTime @default(now())
+  id             Int      @id @default(autoincrement())
+  message        String
+  userId         String
+  user           User     @relation(fields: [userId], references: [id])
+  roomId         String
+  room           Room     @relation(fields: [roomId], references: [id])
+  createdAt      DateTime @default(now())
   
   @@index([roomId])
   @@index([userId])
   @@index([createdAt])
 }
 
-model Snapshot {
-  id        Int   @id    @default(autoincrement())
-  roomId    String
-  room      Room   @relation(fields: [roomId], references: [id])
-  coordinates      String
+model Shape{
+  id             String   @id
+  roomId         String
+  room           Room     @relation(fields: [roomId], references: [id], onDelete: Cascade)
+  type           String
+  coordinates    Json
+  createdAt      DateTime @default(now())
   @@index([roomId])
-  createdAt DateTime @default(now())
+  
 }
